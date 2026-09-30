@@ -6,8 +6,8 @@ on:
     - cron: '0 3 5 * *'
   workflow_dispatch:
     inputs:
-      prefs:
-        description: '対象の都道府県コード（カンマ区切り、空欄で全国）'
+      sources:
+        description: '更新するデータ（カンマ区切り: jp,gb,fr,sg,tw,kr,indicators）。空欄ですべて'
         required: false
         default: ''
       from:
@@ -22,10 +22,17 @@ concurrency:
   group: refresh-data
   cancel-in-progress: false
 
+env:
+  SOURCES: ${{ inputs.sources || 'jp,gb,fr,sg,tw,kr,indicators' }}
+  FROM: ${{ inputs.from }}
+  # API キーが要るデータは、Secrets が未登録ならスキップする
+  REINFOLIB_API_KEY: ${{ secrets.REINFOLIB_API_KEY }}
+  KOREA_DATA_API_KEY: ${{ secrets.KOREA_DATA_API_KEY }}
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
 
@@ -36,29 +43,39 @@ jobs:
 
       - run: npm ci
 
+      # 1つのデータで失敗しても、残りの取得とコミットは続ける。失敗した地域の既存ファイルはそのまま残る
       - name: Build data
-        env:
-          REINFOLIB_API_KEY: ${{ secrets.REINFOLIB_API_KEY }}
-          PREFS: ${{ inputs.prefs }}
-          FROM: ${{ inputs.from }}
+        id: build
         run: |
-          args=()
-          [ -n "$PREFS" ] && args+=(--prefs "$PREFS")
-          [ -n "$FROM" ] && args+=(--from "$FROM")
-          node scripts/build-data.js "${args[@]}"
+          failed=()
+          for src in ${SOURCES//,/ }; do
+            if [ "$src" = jp ] && [ -z "$REINFOLIB_API_KEY" ]; then echo "::notice::jp: REINFOLIB_API_KEY 未登録のためスキップ"; continue; fi
+            if [ "$src" = kr ] && [ -z "$KOREA_DATA_API_KEY" ]; then echo "::notice::kr: KOREA_DATA_API_KEY 未登録のためスキップ"; continue; fi
+            args=()
+            [ -n "$FROM" ] && args+=(--from "$FROM")
+            echo "::group::$src"
+            node scripts/build-data.js "$src" "${args[@]}" || failed+=("$src")
+            echo "::endgroup::"
+          done
+          echo "failed=${failed[*]}" >> "$GITHUB_OUTPUT"
 
       - run: npm test
 
-      # 一部の都道府県だけ失敗した場合も、取得できた分はコミットする
       - name: Commit data
         if: ${{ !cancelled() }}
         run: |
           git add data
           if git diff --cached --quiet; then
             echo "データに変更はありません"
-            exit 0
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m "data: refresh $(date -u +%Y-%m-%d) (${SOURCES})"
+            git push
           fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m "data: refresh $(date -u +%Y-%m-%d)"
-          git push
+
+      - name: Report failures
+        if: ${{ steps.build.outputs.failed != '' }}
+        run: |
+          echo "::error::取得に失敗したデータがあります: ${{ steps.build.outputs.failed }}"
+          exit 1

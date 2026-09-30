@@ -1,11 +1,11 @@
 {
-  "name": "jp-realestate-mcp",
-  "version": "0.1.0",
-  "description": "国土交通省 不動産情報ライブラリの取引価格を集計済みデータとして同梱した MCP サーバー",
+  "name": "world-realestate-mcp",
+  "version": "0.2.0",
+  "description": "世界の不動産相場を調べる MCP サーバー。日本・英国・フランス・シンガポール・台湾・韓国の取引データ（地域・地区別の価格中央値と㎡単価）と、約60か国の住宅価格・家賃指数（BIS・OECD）、米国の州・都市圏別価格指数（FHFA）を同梱",
   "type": "module",
   "license": "MIT",
   "bin": {
-    "jp-realestate-mcp": "dist/jp-realestate-mcp.mjs"
+    "world-realestate-mcp": "dist/world-realestate-mcp.mjs"
   },
   "files": [
     "src",
@@ -19,7 +19,7 @@
     "start": "node src/index.js",
     "build-data": "node scripts/build-data.js",
     "test": "npm run bundle && node --test test/*.test.js",
-    "bundle": "esbuild src/index.js --bundle --minify --platform=node --format=esm --target=node20 --outfile=dist/jp-realestate-mcp.mjs --legal-comments=none --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\""
+    "bundle": "esbuild src/index.js --bundle --minify --platform=node --format=esm --target=node20 --outfile=dist/world-realestate-mcp.mjs --legal-comments=none --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\""
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.31.0",
@@ -27,5 +27,20 @@
   },
   "devDependencies": {
     "esbuild": "^0.28.2"
-  }
+  },
+  "keywords": [
+    "real-estate",
+    "housing",
+    "property-prices",
+    "mcp",
+    "japan",
+    "uk",
+    "france",
+    "singapore",
+    "taiwan",
+    "korea",
+    "bis",
+    "oecd",
+    "fhfa"
+  ]
 }

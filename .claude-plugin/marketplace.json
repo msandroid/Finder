@@ -1,13 +1,17 @@
 {
-  "name": "jp-realestate",
-  "owner": { "name": "msandroid" },
-  "metadata": { "description": "日本の不動産取引価格 MCP" },
+  "name": "world-realestate",
+  "owner": {
+    "name": "msandroid"
+  },
+  "metadata": {
+    "description": "世界の不動産相場 MCP"
+  },
   "plugins": [
     {
-      "name": "jp-realestate",
+      "name": "world-realestate",
       "source": "./",
-      "description": "国土交通省 不動産情報ライブラリの取引価格を集計した相場データの MCP サーバー",
-      "version": "0.1.0"
+      "description": "世界の不動産相場を調べる MCP サーバー。日本・英国・フランス・シンガポール・台湾・韓国の取引データ（地域・地区別の価格中央値と㎡単価）と、約60か国の住宅価格・家賃指数（BIS・OECD）、米国の州・都市圏別価格指数（FHFA）を同梱",
+      "version": "0.2.0"
     }
   ]
 }

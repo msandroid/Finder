@@ -10,20 +10,3 @@ export const PREFECTURES = [
   ['41', '佐賀県'], ['42', '長崎県'], ['43', '熊本県'], ['44', '大分県'], ['45', '宮崎県'],
   ['46', '鹿児島県'], ['47', '沖縄県'],
 ];
-
-const SUFFIX = /[都道府県]$/;
-
-// "13" / "13000" / "東京都" / "東京" を都道府県コード2桁に解決する
-export function resolvePrefecture(input) {
-  const s = String(input ?? '').trim();
-  if (/^\d{1,5}$/.test(s)) {
-    const code = s.length >= 4 ? s.slice(0, 2) : s.padStart(2, '0');
-    return PREFECTURES.find(([c]) => c === code)?.[0] ?? null;
-  }
-  const hit = PREFECTURES.find(([, name]) => name === s || name.replace(SUFFIX, '') === s);
-  return hit?.[0] ?? null;
-}
-
-export function prefectureName(code) {
-  return PREFECTURES.find(([c]) => c === code)?.[1] ?? null;
-}
