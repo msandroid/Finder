@@ -5,7 +5,8 @@ LLM から市区町村・地区ごとの売買相場の推移や、地区別の�
 
 - 実行時にネットワークも API キーも要りません。集計済みデータ（`data/*.json.gz`）を読むだけです。
 - 読み込むのは問い合わせた都道府県のファイルだけで、同時に保持するのは最大3件です。
-- 依存パッケージは `@modelcontextprotocol/sdk` と `zod` だけです。
+- 依存パッケージは `@modelcontextprotocol/sdk` と `zod` だけで、配布用に1ファイルにまとめてあります。
+- Claude Code・Codex・Cursor のプラグインとして入れられるほか、任意の MCP クライアントにも登録できます。
 - データは GitHub Actions が毎月5日に自動で更新します。
 
 > **注意**: 収録しているのは**売買の取引価格**だけです。賃料は含みません（後述）。
@@ -26,31 +27,89 @@ LLM から市区町村・地区ごとの売買相場の推移や、地区別の�
 
 ㎡単価は、公表値（`UnitPrice`）があればその値を使い、なければ「取引価格 ÷ 面積」で計算します。`宅地(土地と建物)` の面積は土地面積です。「2000㎡以上」のように面積が打ち切られている取引は、㎡単価の計算から除外します。
 
-## 使い方
+## インストール
+
+サーバー本体は依存パッケージを同梱した単一ファイル `dist/jp-realestate-mcp.mjs` です。Node.js 20 以上があれば `npm install` なしで動きます。
+以下は Claude Code・Codex・Cursor のプラグインとして入れる方法と、任意の MCP クライアントに直接登録する方法です。
+
+### Claude Code（プラグイン）
 
 ```bash
-git clone <this repo> && cd jp-realestate-mcp
-npm ci
+claude plugin marketplace add msandroid/Finder
+claude plugin install jp-realestate@jp-realestate
 ```
 
-Claude Desktop などの MCP クライアント設定:
+セッション内で `/plugin marketplace add msandroid/Finder` から入れることもできます。定義は `.claude-plugin/` にあります。
+
+### Codex（プラグイン）
+
+```bash
+codex plugin marketplace add msandroid/Finder
+```
+
+追加後、Codex で `/plugins` を開き、`jp-realestate` をインストールします。定義は `.codex-plugin/plugin.json` と `.agents/plugins/marketplace.json` にあります。
+
+### Cursor（プラグイン）
+
+定義は `.cursor-plugin/plugin.json` にあります。ローカルで使う場合は、リポジトリを `~/.cursor/plugins/local/` に置いて Cursor を再読み込み（**Developer: Reload Window**）します。
+
+```bash
+git clone https://github.com/msandroid/Finder ~/.cursor/plugins/local/jp-realestate
+```
+
+チームで配布する場合は、Cursor の team marketplace にこのリポジトリを登録します。
+
+### MCP サーバーとして直接登録する
+
+リポジトリを clone し、各クライアントの設定に `dist/jp-realestate-mcp.mjs` を登録します。
+
+```bash
+git clone https://github.com/msandroid/Finder jp-realestate-mcp
+```
+
+**Claude Code**
+
+```bash
+claude mcp add jp-realestate -- node /path/to/jp-realestate-mcp/dist/jp-realestate-mcp.mjs
+```
+
+**Claude Desktop**（`claude_desktop_config.json`）と **Cursor**（`~/.cursor/mcp.json` またはプロジェクトの `.cursor/mcp.json`）
 
 ```json
 {
   "mcpServers": {
     "jp-realestate": {
       "command": "node",
-      "args": ["/path/to/jp-realestate-mcp/src/index.js"]
+      "args": ["/path/to/jp-realestate-mcp/dist/jp-realestate-mcp.mjs"]
     }
   }
 }
 ```
 
-Claude Code の場合:
+**Codex**
 
 ```bash
-claude mcp add jp-realestate -- node /path/to/jp-realestate-mcp/src/index.js
+codex mcp add jp-realestate -- node /path/to/jp-realestate-mcp/dist/jp-realestate-mcp.mjs
 ```
+
+または `~/.codex/config.toml` に次を追加します。
+
+```toml
+[mcp_servers.jp-realestate]
+command = "node"
+args = ["/path/to/jp-realestate-mcp/dist/jp-realestate-mcp.mjs"]
+```
+
+### データの更新を取り込む
+
+データは毎月このリポジトリにコミットされます。取り込み方はインストール方法によって異なります。
+
+- プラグインで入れた場合：各クライアントの marketplace 更新（例: `claude plugin marketplace update jp-realestate`、`codex plugin marketplace upgrade`）
+- clone した場合：`git pull`
+
+### 開発者向け
+
+`src/` を変更したら `npm run bundle` で `dist/` を作り直してコミットしてください。`npm test` も先にバンドルを作ります。CI（`ci.yml`）は、`dist/` がソースと一致しない場合に失敗します。
 
 ## データ
 
@@ -97,6 +156,7 @@ npm test
 ```
 
 合成データ10件を使い、集計、gzip の書き出し、MCP サーバー（stdio）経由の問い合わせまでを通しで確認します。
+あわせて、配布用バンドルが外部パッケージなしで起動すること、各プラグイン定義がバンドルを正しく指していることも確認します。
 
 ## 賃貸相場について
 

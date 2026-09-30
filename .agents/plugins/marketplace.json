@@ -1,0 +1,12 @@
+{
+  "name": "jp-realestate",
+  "interface": { "displayName": "日本の不動産相場" },
+  "plugins": [
+    {
+      "name": "jp-realestate",
+      "source": { "source": "local", "path": "./" },
+      "policy": { "installation": "AVAILABLE" },
+      "category": "Research"
+    }
+  ]
+}

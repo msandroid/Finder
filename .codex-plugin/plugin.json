@@ -1,0 +1,22 @@
+{
+  "name": "jp-realestate",
+  "version": "0.1.0",
+  "description": "国土交通省 不動産情報ライブラリの取引価格（売買）を集計した相場データを、市区町村・地区単位で問い合わせる MCP サーバー",
+  "author": { "name": "msandroid" },
+  "repository": "https://github.com/msandroid/Finder",
+  "license": "MIT",
+  "keywords": ["real-estate", "japan", "mlit", "reinfolib", "mcp"],
+  "mcpServers": {
+    "jp-realestate": {
+      "command": "node",
+      "args": ["./dist/jp-realestate-mcp.mjs"],
+      "cwd": "."
+    }
+  },
+  "interface": {
+    "displayName": "日本の不動産相場",
+    "shortDescription": "国交省の取引価格データで市区町村・地区の売買相場を調べる",
+    "developerName": "msandroid",
+    "category": "Research"
+  }
+}

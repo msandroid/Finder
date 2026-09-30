@@ -5,10 +5,11 @@
   "type": "module",
   "license": "MIT",
   "bin": {
-    "jp-realestate-mcp": "src/index.js"
+    "jp-realestate-mcp": "dist/jp-realestate-mcp.mjs"
   },
   "files": [
     "src",
+    "dist",
     "data"
   ],
   "engines": {
@@ -17,10 +18,14 @@
   "scripts": {
     "start": "node src/index.js",
     "build-data": "node scripts/build-data.js",
-    "test": "node --test test/*.test.js"
+    "test": "npm run bundle && node --test test/*.test.js",
+    "bundle": "esbuild src/index.js --bundle --minify --platform=node --format=esm --target=node20 --outfile=dist/jp-realestate-mcp.mjs --legal-comments=none --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\""
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.31.0",
     "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
   }
 }

@@ -1,0 +1,13 @@
+{
+  "name": "jp-realestate",
+  "owner": { "name": "msandroid" },
+  "metadata": { "description": "日本の不動産取引価格 MCP" },
+  "plugins": [
+    {
+      "name": "jp-realestate",
+      "source": "./",
+      "description": "国土交通省 不動産情報ライブラリの取引価格を集計した相場データの MCP サーバー",
+      "version": "0.1.0"
+    }
+  ]
+}
