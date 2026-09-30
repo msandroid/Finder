@@ -1,0 +1,64 @@
+name: refresh-data
+
+on:
+  schedule:
+    # 毎月5日 12:00 JST
+    - cron: '0 3 5 * *'
+  workflow_dispatch:
+    inputs:
+      prefs:
+        description: '対象の都道府県コード（カンマ区切り、空欄で全国）'
+        required: false
+        default: ''
+      from:
+        description: '取得開始年（空欄で5年前から）'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build data
+        env:
+          REINFOLIB_API_KEY: ${{ secrets.REINFOLIB_API_KEY }}
+          PREFS: ${{ inputs.prefs }}
+          FROM: ${{ inputs.from }}
+        run: |
+          args=()
+          [ -n "$PREFS" ] && args+=(--prefs "$PREFS")
+          [ -n "$FROM" ] && args+=(--from "$FROM")
+          node scripts/build-data.js "${args[@]}"
+
+      - run: npm test
+
+      # 一部の都道府県だけ失敗した場合も、取得できた分はコミットする
+      - name: Commit data
+        if: ${{ !cancelled() }}
+        run: |
+          git add data
+          if git diff --cached --quiet; then
+            echo "データに変更はありません"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "data: refresh $(date -u +%Y-%m-%d)"
+          git push

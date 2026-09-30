@@ -1,0 +1,26 @@
+{
+  "name": "jp-realestate-mcp",
+  "version": "0.1.0",
+  "description": "国土交通省 不動産情報ライブラリの取引価格を集計済みデータとして同梱した MCP サーバー",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "jp-realestate-mcp": "src/index.js"
+  },
+  "files": [
+    "src",
+    "data"
+  ],
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "build-data": "node scripts/build-data.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.31.0",
+    "zod": "^4.6.5"
+  }
+}
