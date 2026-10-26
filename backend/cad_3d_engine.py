@@ -502,6 +502,15 @@ def generate_architectural_model(
     story_height_m = 2.95
     total_height_m = round(stories * story_height_m + 0.9, 2)
 
+    is_office_layout = (
+        "事務所" in (floor_plan_type or "")
+        or "オフィス" in (floor_plan_type or "")
+        or "事務所" in (title or "")
+        or "オフィス" in (title or "")
+    )
+    if is_office_layout and stories is None:
+        stories = 1
+
     # 各階の詳細間取り平面図（部屋・壁・扉開閉円弧・窓・設備・柱）を生成
     floors_data: List[Dict[str, Any]] = []
     for fl in range(1, stories + 1):
@@ -512,7 +521,105 @@ def generate_architectural_model(
         windows: List[Dict[str, Any]] = []
         fixtures: List[Dict[str, Any]] = []
 
-        if fl == 1:
+        if is_office_layout:
+            # 少人数オフィス・事務所レイアウト（執務室4〜5席・4名会議室・受付複合機・給湯化粧室・書庫）
+            split_y = round(bld_min_y + bld_d * 0.56, 2)
+            split_x_mtg = round(bld_min_x + bld_w * 0.62, 2)
+            split_x1 = round(bld_min_x + bld_w * 0.34, 2)
+            split_x2 = round(bld_min_x + bld_w * 0.68, 2)
+
+            # 南西：メイン執務室（2〜5名デスク配置）
+            work_w = round(split_x_mtg - bld_min_x, 2)
+            work_d = round(split_y - bld_min_y, 2)
+            work_area = round(work_w * work_d, 1)
+            rooms.append({
+                "id": f"F{fl}_OFFICE_WORK",
+                "name": "執務室（デスク4〜5席）",
+                "x": bld_min_x,
+                "y": bld_min_y,
+                "w": work_w,
+                "d": work_d,
+                "area_sqm": work_area,
+                "tatami_jo": round(work_area / 1.62, 1),
+                "color": "#1e3a5f",
+            })
+            # 南東：4名会議・オンライン打合せ室
+            mtg_w = round(bld_max_x - split_x_mtg, 2)
+            mtg_d = work_d
+            mtg_area = round(mtg_w * mtg_d, 1)
+            rooms.append({
+                "id": f"F{fl}_OFFICE_MTG",
+                "name": "会議・応接室（4名用）",
+                "x": split_x_mtg,
+                "y": bld_min_y,
+                "w": mtg_w,
+                "d": mtg_d,
+                "area_sqm": mtg_area,
+                "tatami_jo": round(mtg_area / 1.62, 1),
+                "color": "#0f766e",
+            })
+            # 北西：給湯・洗面・化粧室
+            wet_w = round(split_x1 - bld_min_x, 2)
+            wet_d = round(bld_max_y - split_y, 2)
+            wet_area = round(wet_w * wet_d, 1)
+            rooms.append({
+                "id": f"F{fl}_OFFICE_WET",
+                "name": "給湯室・化粧室",
+                "x": bld_min_x,
+                "y": split_y,
+                "w": wet_w,
+                "d": wet_d,
+                "area_sqm": wet_area,
+                "tatami_jo": round(wet_area / 1.62, 1),
+                "color": "#164e63",
+            })
+            # 中央北：書庫・通信サーバ・複合機コーナー
+            srv_w = round(split_x2 - split_x1, 2)
+            srv_d = wet_d
+            srv_area = round(srv_w * srv_d, 1)
+            rooms.append({
+                "id": f"F{fl}_OFFICE_STORAGE",
+                "name": "書庫・複合機・通信室",
+                "x": split_x1,
+                "y": split_y,
+                "w": srv_w,
+                "d": srv_d,
+                "area_sqm": srv_area,
+                "tatami_jo": round(srv_area / 1.62, 1),
+                "color": "#334155",
+            })
+            # 北東：受付・エントランスホール
+            rec_w = round(bld_max_x - split_x2, 2)
+            rec_d = wet_d
+            rec_area = round(rec_w * rec_d, 1)
+            rooms.append({
+                "id": f"F{fl}_OFFICE_ENT",
+                "name": "受付・エントランス",
+                "x": split_x2,
+                "y": split_y,
+                "w": rec_w,
+                "d": rec_d,
+                "area_sqm": rec_area,
+                "tatami_jo": round(rec_area / 1.62, 1),
+                "color": "#3b2f2f",
+            })
+
+            doors.extend([
+                {"x": round(split_x2 + rec_w * 0.5, 2), "y": bld_max_y, "radius": 0.85, "start_deg": 180, "end_deg": 270, "label": "事務所入口扉"},
+                {"x": round(split_x_mtg + mtg_w * 0.35, 2), "y": split_y, "radius": 0.75, "start_deg": 180, "end_deg": 270, "label": "会議室ガラス扉"},
+                {"x": round(bld_min_x + work_w * 0.5, 2), "y": split_y, "radius": 0.75, "start_deg": 270, "end_deg": 360, "label": "執務室扉"},
+            ])
+            windows.extend([
+                {"x1": round(bld_min_x + 0.5, 2), "y1": bld_min_y, "x2": round(split_x_mtg - 0.3, 2), "y2": bld_min_y, "label": "執務室採光窓"},
+                {"x1": round(split_x_mtg + 0.3, 2), "y1": bld_min_y, "x2": round(bld_max_x - 0.5, 2), "y2": bld_min_y, "label": "会議室採光窓"},
+            ])
+            # オフィス家具（対向4席デスク島・会議テーブル・複合機・給湯シンク）
+            fixtures.extend([
+                {"type": "執務デスク4席島", "x": round(bld_min_x + work_w * 0.2, 2), "y": round(bld_min_y + work_d * 0.28, 2), "w": round(min(2.4, work_w * 0.6), 2), "d": round(min(1.4, work_d * 0.45), 2)},
+                {"type": "4名会議テーブル", "x": round(split_x_mtg + mtg_w * 0.22, 2), "y": round(bld_min_y + mtg_d * 0.25, 2), "w": round(min(1.8, mtg_w * 0.55), 2), "d": round(min(1.1, mtg_d * 0.48), 2)},
+                {"type": "複合機・キャビネット", "x": round(split_x1 + 0.2, 2), "y": round(split_y + 0.2, 2), "w": round(min(1.4, srv_w * 0.7), 2), "d": 0.6},
+            ])
+        elif fl == 1:
             # 1階：玄関・廊下・洗面浴室・便所・居間・食堂・台所
             split_y = round(bld_min_y + bld_d * 0.42, 2)
             split_x1 = round(bld_min_x + bld_w * 0.34, 2)

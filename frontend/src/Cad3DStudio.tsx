@@ -26,6 +26,12 @@ interface JapanPresetLocation {
 
 const JAPAN_URBAN_PRESETS: JapanPresetLocation[] = [
   {
+    label: "北海道札幌市中央区・大通〜札幌駅周辺（チ・カ・ホ直結・中枢ビジネス街区）",
+    latitude: 43.0621,
+    longitude: 141.3544,
+    radius_m: 260,
+  },
+  {
     label: "東京都港区・六本木一丁目周辺（都心街区・高低差地形）",
     latitude: 35.6645,
     longitude: 139.7385,
@@ -1021,12 +1027,15 @@ export function Cad3DStudio({
                 </div>
 
                 <div className="form-row">
-                  <label className="form-label">間取り構成</label>
+                  <label className="form-label">間取り・空間構成</label>
                   <select
                     className="form-select"
                     value={floorPlanText}
                     onChange={(e) => setFloorPlanText(e.target.value)}
                   >
+                    <option value="少人数事務所">
+                      少人数事務所（執務4〜5席＋4名会議室＋給湯・書庫）
+                    </option>
                     <option value="2LDK">{formatFloorPlanJP("2LDK")}</option>
                     <option value="3LDK">{formatFloorPlanJP("3LDK")}</option>
                     <option value="4LDK">{formatFloorPlanJP("4LDK")}</option>

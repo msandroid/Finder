@@ -11,6 +11,10 @@ from backend.connectors.gsi_gov import (
 from backend.connectors.suumo import fetch_suumo_rent_listings, fetch_suumo_sale_listings
 from backend.connectors.yahoo import fetch_yahoo_listings
 from backend.connectors.nifty import fetch_nifty_listings
+from backend.connectors.office_commercial import (
+    fetch_sapporo_tenant_offices,
+    fetch_suumo_soho_office_listings,
+)
 from backend.database import query_properties, record_agent_activity, upsert_properties
 
 
@@ -105,10 +109,14 @@ async def live_search_and_sync(
     muni_code = muni_info["muni_code"] if muni_info else None
     muni_name = muni_info["muni_name"] if muni_info else (municipality or None)
 
+    norm_cat = category
+    if norm_cat in ("オフィス", "事務所", "貸事務所", "オフィス・事務所"):
+        norm_cat = "オフィス・事務所"
+
     target_categories = (
-        ["売地", "戸建て", "マンション"]
-        if (not category or category == "すべて")
-        else [category]
+        ["売地", "戸建て", "マンション", "オフィス・事務所"]
+        if (not norm_cat or norm_cat == "すべて")
+        else [norm_cat]
     )
 
     tasks = []
@@ -124,7 +132,24 @@ async def live_search_and_sync(
         follow_redirects=True,
     ) as client:
         for cat in target_categories:
-            if cat == "賃貸":
+            if cat == "オフィス・事務所":
+                tasks.append(
+                    fetch_suumo_soho_office_listings(
+                        pref_code=pref_code,
+                        muni_code=muni_code,
+                        keyword=keyword,
+                        client=client,
+                    )
+                )
+                if pref_code == "01":
+                    tasks.append(
+                        fetch_sapporo_tenant_offices(
+                            muni_code=muni_code,
+                            keyword=keyword,
+                            client=client,
+                        )
+                    )
+            elif cat == "賃貸":
                 tasks.append(
                     fetch_suumo_rent_listings(
                         pref_code=pref_code,
@@ -179,7 +204,7 @@ async def live_search_and_sync(
     queried = query_properties(
         prefecture_code=pref_code,
         municipality_name=muni_name,
-        category=category if category != "すべて" else None,
+        category=norm_cat if norm_cat != "すべて" else None,
         keyword=keyword,
         limit=120,
     )

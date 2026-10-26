@@ -726,7 +726,7 @@ export function App() {
   function getCategoryBadgeClass(cat: string): string {
     if (cat === "売地") return "prop-badge badge-land";
     if (cat === "マンション") return "prop-badge badge-condo";
-    if (cat === "賃貸") return "prop-badge badge-rent";
+    if (cat === "賃貸" || cat === "オフィス・事務所") return "prop-badge badge-rent";
     return "prop-badge badge-house";
   }
 
@@ -848,6 +848,7 @@ export function App() {
                     onChange={(e) => setSelectedCategory(e.target.value)}
                   >
                     <option value="すべて">すべて（全種別横断）</option>
+                    <option value="オフィス・事務所">オフィス・事務所（貸事務所・少人数・兼業可）</option>
                     <option value="売地">売地（宅地・建築条件付・更地）</option>
                     <option value="戸建て">戸建て（中古戸建・新築戸建）</option>
                     <option value="マンション">マンション（区分所有）</option>
