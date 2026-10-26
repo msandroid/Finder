@@ -1,5 +1,6 @@
 import {
   AgentEvaluation,
+  ArchitecturalModelData,
   DatabaseStats,
   MapLayerInfo,
   MunicipalityInfo,
@@ -7,6 +8,7 @@ import {
   PropertyItem,
   SpatialAnalysisResult,
   UISyncState,
+  Urban3DSceneData,
   WatchlistGroup,
 } from "./types";
 
@@ -231,3 +233,61 @@ export async function fetchAgentIntegrationGuide(): Promise<{
   const res = await fetch("/api/agent-integration-guide");
   return res.json();
 }
+
+export async function generatePropertyCad3DApi(payload: {
+  property_id?: number;
+  title?: string;
+  address?: string;
+  land_area_sqm?: number;
+  building_coverage_ratio?: number;
+  floor_area_ratio?: number;
+  road_width_m?: number;
+  road_direction?: string;
+  stories?: number;
+  floor_plan_type?: string;
+  latitude?: number;
+  longitude?: number;
+  agent_name?: string;
+}): Promise<{
+  model: ArchitecturalModelData;
+  floor_svgs: Record<string, string>;
+  downloads: {
+    svg_floor_1: string;
+    dxf: string;
+    obj: string;
+    gltf: string;
+  };
+}> {
+  const res = await fetch("/api/cad3d/property", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  return res.json();
+}
+
+export async function generateUrbanCad3DApi(payload: {
+  property_id?: number;
+  latitude?: number;
+  longitude?: number;
+  radius_m?: number;
+  zoom?: number;
+  agent_name?: string;
+}): Promise<{
+  urban: Urban3DSceneData;
+  svg: string;
+  downloads: {
+    svg: string;
+    dxf: string;
+    obj: string;
+    gltf: string;
+  };
+}> {
+  const res = await fetch("/api/cad3d/urban", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  return res.json();
+}
+

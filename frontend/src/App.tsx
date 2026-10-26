@@ -33,8 +33,9 @@ import {
   UISyncState,
   WatchlistGroup,
 } from "./types";
+import { Cad3DStudio } from "./Cad3DStudio";
 
-type MainTab = "search" | "simulator" | "watchlist" | "agent";
+type MainTab = "search" | "cad3d" | "simulator" | "watchlist" | "agent";
 type RightSubTab = "list" | "detail" | "activity";
 
 const MAPLIBRE_JP_LOCALE: Record<string, string> = {
@@ -219,7 +220,8 @@ export function App() {
           if (
             msg.type === "LIVE_SEARCH_COMPLETED" ||
             msg.type === "AGENT_EVALUATION_ADDED" ||
-            msg.type === "WATCHLIST_UPDATED"
+            msg.type === "WATCHLIST_UPDATED" ||
+            msg.type === "CAD3D_GENERATED"
           ) {
             const [st, wls] = await Promise.all([fetchStats(), fetchWatchlists()]);
             setStats(st);
@@ -746,6 +748,13 @@ export function App() {
             onClick={() => setMainTab("search")}
           >
             地図・一覧統合検索
+          </button>
+          <button
+            type="button"
+            className={`nav-tab ${mainTab === "cad3d" ? "active" : ""}`}
+            onClick={() => setMainTab("cad3d")}
+          >
+            平面図・立体モデル設計
           </button>
           <button
             type="button"
@@ -1404,6 +1413,17 @@ export function App() {
                         </button>
                       </div>
 
+                      <div style={{ marginBottom: "8px" }}>
+                        <button
+                          type="button"
+                          className="btn btn-amber"
+                          style={{ width: "100%" }}
+                          onClick={() => setMainTab("cad3d")}
+                        >
+                          この物件の詳細平面図・立体建築モデル・周辺地形を開く
+                        </button>
+                      </div>
+
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                         {Object.entries(selectedProperty.source_urls || {}).map(
                           ([siteName, url]) => (
@@ -1634,7 +1654,17 @@ export function App() {
         </div>
       )}
 
-      {/* タブ2：建築ボリューム・投資収益シミュレーター */}
+      {/* タブ2：平面図・立体モデル設計スタジオ */}
+      {mainTab === "cad3d" && (
+        <Cad3DStudio
+          selectedProperty={selectedProperty}
+          properties={properties}
+          onSelectProperty={handleSelectProperty}
+          onStatusChange={setStatusMessage}
+        />
+      )}
+
+      {/* タブ3：建築ボリューム・投資収益シミュレーター */}
       {mainTab === "simulator" && (
         <div className="full-page-view">
           <div className="sim-grid">
@@ -2040,6 +2070,12 @@ export function App() {
                   <th>建築ボリューム・投資収支計算</th>
                   <td>
                     前面道路幅員制限を考慮した実効容積率・最大延床面積・概算建築費、および融資金利・期間に基づく実質利回り・税引前収支を計算します。
+                  </td>
+                </tr>
+                <tr>
+                  <th>詳細平面図・立体モデル・都市地形生成</th>
+                  <td>
+                    個別敷地の各階間取り平面図・建築基準法斜線制限・季節別日影投影モデル、および国土地理院の数値標高モデルとベクトルタイルに基づく日本全国の実在街区・等高線立体モデルを生成し、各種設計データ形式で保存します。
                   </td>
                 </tr>
                 <tr>

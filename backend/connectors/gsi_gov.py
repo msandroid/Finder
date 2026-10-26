@@ -306,74 +306,95 @@ async def fetch_surrounding_facilities(
     radius_m: int = 800,
     client: Optional[httpx.AsyncClient] = None,
 ) -> List[Dict[str, Any]]:
-    """OpenStreetMap Overpass API を用いて指定座標周辺の主要生活施設（駅・スーパー・コンビニ・学校・病院・公園）を取得する。"""
+    """国土地理院 公式ベクトルタイル（label / symbol）を用いて指定座標周辺の主要施設（駅・学校・病院・官公署・公園・名所等）を取得する。"""
+    import mapbox_vector_tile
+
     own_client = False
     if client is None:
-        client = httpx.AsyncClient(timeout=15.0)
+        client = httpx.AsyncClient(timeout=12.0)
         own_client = True
 
-    query = f"""
-    [out:json][timeout:10];
-    (
-      node["railway"="station"](around:{radius_m},{lat},{lon});
-      node["shop"~"supermarket|convenience"](around:{radius_m},{lat},{lon});
-      node["amenity"~"school|hospital|clinic|pharmacy"](around:{radius_m},{lat},{lon});
-      way["leisure"="park"](around:{radius_m},{lat},{lon});
-    );
-    out center 25;
-    """
     facilities: List[Dict[str, Any]] = []
-    category_map = {
-        "station": "鉄道駅",
-        "supermarket": "スーパーマーケット",
-        "convenience": "コンビニエンスストア",
-        "school": "教育施設",
-        "hospital": "病院",
-        "clinic": "診療所・クリニック",
-        "pharmacy": "薬局",
-        "park": "公園",
+    seen_names = set()
+    bv_zoom = 16
+    xtile, ytile, _, _ = latlon_to_tile(lat, lon, bv_zoom)
+    n = 2.0 ** bv_zoom
+
+    def _tile_to_latlon(tx: float, ty: float) -> Tuple[float, float]:
+        lon_deg = tx / n * 360.0 - 180.0
+        lat_rad = math.atan(math.sinh(math.pi * (1.0 - 2.0 * ty / n)))
+        return math.degrees(lat_rad), lon_deg
+
+    anno_type_map = {
+        411: "鉄道駅・交通施設",
+        412: "鉄道駅・交通施設",
+        321: "官公署・公共施設",
+        322: "教育・文化施設",
+        323: "医療・福祉施設",
+        324: "神社・寺院・史跡",
+        511: "主要ランドマーク・施設",
+        631: "公園・緑地",
     }
+
     try:
-        resp = await client.post(
-            "https://overpass-api.de/api/interpreter",
-            data={"data": query},
-        )
-        if resp.status_code == 200:
-            elements = resp.json().get("elements", [])
-            for el in elements:
-                tags = el.get("tags", {})
-                name = tags.get("name:ja") or tags.get("name")
-                if not name:
-                    continue
-                el_lat = el.get("lat") or el.get("center", {}).get("lat")
-                el_lon = el.get("lon") or el.get("center", {}).get("lon")
-                if el_lat is None or el_lon is None:
-                    continue
-                raw_type = (
-                    tags.get("railway")
-                    or tags.get("shop")
-                    or tags.get("amenity")
-                    or tags.get("leisure")
-                    or "施設"
-                )
-                jp_type = category_map.get(raw_type, "周辺施設")
-                dist_m = int(
-                    math.hypot(
-                        (el_lat - lat) * 111_320.0,
-                        (el_lon - lon) * 111_320.0 * math.cos(math.radians(lat)),
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                tx_i, ty_i = xtile + dx, ytile + dy
+                url = f"https://cyberjapandata.gsi.go.jp/xyz/experimental_bvmap/{bv_zoom}/{tx_i}/{ty_i}.pbf"
+                try:
+                    resp = await client.get(url)
+                    if resp.status_code != 200 or not resp.content:
+                        continue
+                    decoded = mapbox_vector_tile.decode(
+                        resp.content,
+                        default_options={"y_coord_down": True},
                     )
-                )
-                facilities.append({
-                    "name": name,
-                    "type": jp_type,
-                    "distance_m": dist_m,
-                    "walk_minutes": max(1, round(dist_m / 80.0)),
-                    "latitude": el_lat,
-                    "longitude": el_lon,
-                })
-            facilities.sort(key=lambda x: x["distance_m"])
-    except Exception:
-        pass
+                    lbl_layer = decoded.get("label", {})
+                    extent = float(lbl_layer.get("extent", 4096))
+                    for feat in lbl_layer.get("features", []):
+                        props = feat.get("properties", {})
+                        name = str(props.get("knj", "")).strip()
+                        if not name or name in seen_names:
+                            continue
+                        geom = feat.get("geometry", {})
+                        coords = geom.get("coordinates", [])
+                        if geom.get("type") != "Point" or len(coords) < 2:
+                            continue
+                        el_lat, el_lon = _tile_to_latlon(
+                            tx_i + coords[0] / extent,
+                            ty_i + coords[1] / extent,
+                        )
+                        dist_m = int(
+                            math.hypot(
+                                (el_lat - lat) * 111_320.0,
+                                (el_lon - lon) * 111_320.0 * math.cos(math.radians(lat)),
+                            )
+                        )
+                        if dist_m > radius_m:
+                            continue
+                        seen_names.add(name)
+                        anno_ctg = int(props.get("annoCtg", 511))
+                        jp_type = anno_type_map.get(anno_ctg, "周辺主要施設")
+                        if "駅" in name:
+                            jp_type = "鉄道駅"
+                        elif "学校" in name or "大学" in name or "学園" in name:
+                            jp_type = "教育施設"
+                        elif "病院" in name or "クリニック" in name or "医院" in name:
+                            jp_type = "医療施設"
+                        elif "公園" in name:
+                            jp_type = "公園・緑地"
+
+                        facilities.append({
+                            "name": name,
+                            "type": jp_type,
+                            "distance_m": dist_m,
+                            "walk_minutes": max(1, round(dist_m / 80.0)),
+                            "latitude": round(el_lat, 6),
+                            "longitude": round(el_lon, 6),
+                        })
+                except Exception:
+                    pass
+        facilities.sort(key=lambda x: x["distance_m"])
     finally:
         if own_client:
             await client.aclose()

@@ -17,9 +17,13 @@
 3. **建築基準法ボリューム試算・不動産投資収支シミュレーター**
    - 前面道路幅員制限（住居系40%・商業系60%）および角地緩和を考慮した実効建蔽率・実効容積率・最大建築面積・最大延床面積・構造別概算建築費の算出。
    - 表面利回り・実質利回り・NOI（純営業収益）・元利均等返済額・税引前キャッシュフロー・CCR（自己資金配当率）の試算。
-4. **Claude / Codex / Antigravity ネイティブ連携**
+4. **日本の詳細な建築2D平面図・都市等高線図および3Dモデル生成（SVG / DXF / OBJ / glTF 2.0 出力対応）**
+   - **個別敷地・建物スケール**: 敷地境界・セットバック・前面道路・寸法線・方位・各階間取り（壁厚・柱・窓記号・扉開閉円弧・帖数/平米表記）を備えた2D CAD建築平面図と、道路斜線・北側斜線3D制限枠および季節（冬至・春分・夏至）×時刻（8時〜16時）別の日影投影を備えた対話型3D建物モデルを自動生成。
+   - **日本全国・都市地形スケール**: 国土地理院の数値標高モデル（DEM5A / DEM10B）から生成する3D標高メッシュ・マーチングスクエア法による等高線と、国土地理院公式ベクトルタイル（`experimental_bvmap`）から抽出する実在建物フットプリント・道路網を統合した2D都市平面図＆3D都市地形モデルを生成。
+   - 2Dベクター図面（`.svg`）、AutoCAD等対応設計図面（`.dxf`）、Wavefront 3Dメッシュ（`.obj`）、標準3Dモデル（`.gltf`）として即時ファイル出力。
+5. **Claude / Codex / Antigravity ネイティブ連携**
    - MCPサーバー（`mcp_server.py` / `.mcp.json`）および CLI（`cli.py`）を標準装備。
-   - Web UI とエージェント間で選択物件・地図範囲・多角形（ポリゴン）検索範囲・評価スコア（100点満点）をリアルタイム共有。
+   - Web UI とエージェント間で選択物件・地図範囲・多角形（ポリゴン）検索範囲・評価スコア（100点満点）・2D平面図/3Dモデルをリアルタイム共有。
 
 ## セットアップと起動方法
 
@@ -54,6 +58,12 @@ uv run python cli.py analyze --property-id 4 --agent claude
 
 # エージェントによる物件評価スコアと所見の登録
 uv run python cli.py evaluate --property-id 4 --agent codex --score 92 --recommendation 強く推奨 --pros "3ポータル共通掲載・駅近" --cons "前面道路幅員の実測確認推奨"
+
+# 個別敷地・建物の2D詳細平面図および3Dモデル生成（SVG / DXF / OBJ / glTF 出力）
+uv run python cli.py generate-cad3d --property-id 4 --stories 3 --floor-plan 4LDK --agent antigravity
+
+# 国土地理院DEM標高メッシュ・等高線・実在街区3D都市モデル生成
+uv run python cli.py generate-urban3d --property-id 4 --radius 240 --agent claude
 ```
 
 ### 4. テストの実行

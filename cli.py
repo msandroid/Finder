@@ -32,6 +32,16 @@ from backend.analyzer import (
     simulate_investment_yield,
     simulate_land_building_volume,
 )
+from backend.cad_3d_engine import (
+    EXPORT_DIR,
+    export_dxf_file,
+    export_gltf_file,
+    export_obj_file,
+    export_property_svg,
+    export_urban_svg,
+    fetch_urban_3d_scene,
+    generate_architectural_model,
+)
 
 
 def _configure_stdout() -> None:
@@ -150,6 +160,25 @@ def main() -> None:
     p_ui.add_argument("--agent", default="antigravity")
     p_ui.add_argument("--message", default="")
 
+    # 9. generate-cad3d (個別物件の2D詳細敷地配置図・間取り平面図＆3D建築モデル出力)
+    p_cad = subparsers.add_parser("generate-cad3d", help="物件の2D詳細平面図(SVG/DXF)および3D建築モデル(OBJ/glTF)を生成")
+    p_cad.add_argument("--property-id", "-i", type=int, default=None, help="物件番号")
+    p_cad.add_argument("--land-area", type=float, default=110.0, help="土地面積（平米）")
+    p_cad.add_argument("--coverage", type=float, default=60.0, help="指定建蔽率（パーセント）")
+    p_cad.add_argument("--far", type=float, default=200.0, help="指定容積率（パーセント）")
+    p_cad.add_argument("--road-width", type=float, default=5.4, help="前面道路幅員（メートル）")
+    p_cad.add_argument("--stories", type=int, default=None, help="階数")
+    p_cad.add_argument("--agent", default="antigravity")
+
+    # 10. generate-urban3d (日本全国・都市の2D等高線街区平面図＆3D地形・都市モデル出力)
+    p_urb = subparsers.add_parser("generate-urban3d", help="国土地理院標高DEMとOSM実在建物から2D街区等高線図・3D都市地形モデルを生成")
+    p_urb.add_argument("--property-id", "-i", type=int, default=None, help="物件番号")
+    p_urb.add_argument("--lat", type=float, default=35.6586, help="北緯")
+    p_urb.add_argument("--lon", type=float, default=139.7454, help="東経")
+    p_urb.add_argument("--radius", type=int, default=220, help="半径（メートル）")
+    p_urb.add_argument("--zoom", type=int, default=15, help="国土地理院標高タイルズームレベル（9〜15）")
+    p_urb.add_argument("--agent", default="antigravity")
+
     args = parser.parse_args()
 
     if args.command == "search":
@@ -265,6 +294,110 @@ def main() -> None:
         state = get_ui_sync_state()
         stats = get_database_stats()
         _print_output({"ui_sync_state": state, "database_stats": stats}, fmt="json")
+
+    elif args.command == "generate-cad3d":
+        land_area = args.land_area
+        cov = args.coverage
+        far = args.far
+        title = "標準敷地・建築計画モデル"
+        address = "東京都港区"
+        lat, lon = 35.6586, 139.7454
+        if args.property_id is not None:
+            prop = get_property_by_id(args.property_id)
+            if prop:
+                land_area = prop.get("land_area_sqm") or prop.get("building_area_sqm") or land_area
+                cov = prop.get("building_coverage_ratio") or cov
+                far = prop.get("floor_area_ratio") or far
+                lat = prop.get("latitude") or lat
+                lon = prop.get("longitude") or lon
+                title = prop.get("title") or title
+                address = prop.get("address") or address
+
+        model = generate_architectural_model(
+            land_area_sqm=land_area,
+            building_coverage_ratio=cov,
+            floor_area_ratio=far,
+            road_width_m=args.road_width,
+            stories=args.stories,
+            latitude=lat,
+            longitude=lon,
+            title=title,
+            address=address,
+        )
+        svg_paths = []
+        for fl in model["building"]["floors"]:
+            fnum = fl["floor_number"]
+            p = EXPORT_DIR / f"property_floor_{fnum}.svg"
+            p.write_text(export_property_svg(model, floor_number=fnum), encoding="utf-8")
+            svg_paths.append(str(p))
+
+        dxf_path = export_dxf_file(model, "property_plan.dxf")
+        obj_path = export_obj_file(model, "property_model.obj")
+        gltf_path = export_gltf_file(model, "property_model.gltf")
+
+        record_agent_activity(
+            agent_name=args.agent,
+            action="2D建築平面図・3Dモデル出力",
+            summary=f"CLIより「{title}」の2D平面図（SVG/DXF）および3Dモデル（OBJ/glTF）を出力しました。",
+            highlighted_property_ids=[args.property_id] if args.property_id else [],
+        )
+        _print_output(
+            {
+                "title": title,
+                "address": address,
+                "site": model["site"],
+                "stories": model["building"]["stories"],
+                "total_floor_area_sqm": model["building"]["total_floor_area_sqm"],
+                "exported_files": {
+                    "svg": svg_paths,
+                    "dxf": str(dxf_path),
+                    "obj": str(obj_path),
+                    "gltf": str(gltf_path),
+                },
+            },
+            fmt="json",
+        )
+
+    elif args.command == "generate-urban3d":
+        lat, lon = args.lat, args.lon
+        if args.property_id is not None:
+            prop = get_property_by_id(args.property_id)
+            if prop and prop.get("latitude") and prop.get("longitude"):
+                lat = prop["latitude"]
+                lon = prop["longitude"]
+
+        urban = asyncio.run(
+            fetch_urban_3d_scene(lat=lat, lon=lon, radius_m=args.radius, zoom=args.zoom)
+        )
+        svg_path = EXPORT_DIR / "urban_plan.svg"
+        svg_path.write_text(export_urban_svg(urban), encoding="utf-8")
+        dxf_path = export_dxf_file(urban, "urban_plan.dxf")
+        obj_path = export_obj_file(urban, "urban_model.obj")
+        gltf_path = export_gltf_file(urban, "urban_model.gltf")
+
+        record_agent_activity(
+            agent_name=args.agent,
+            action="3D都市・地形・2D等高線図生成",
+            summary=f"CLIより北緯{lat:.4f}度・東経{lon:.4f}度周辺の2D等高線平面図と3D都市地形モデルを出力しました。",
+            highlighted_property_ids=[args.property_id] if args.property_id else [],
+        )
+        _print_output(
+            {
+                "coordinates": urban["coordinates"],
+                "terrain_source": urban["terrain"]["source"],
+                "min_elevation_m": urban["terrain"]["min_elevation_m"],
+                "max_elevation_m": urban["terrain"]["max_elevation_m"],
+                "buildings_count": urban["buildings_count"],
+                "roads_count": urban["roads_count"],
+                "exported_files": {
+                    "svg": str(svg_path),
+                    "dxf": str(dxf_path),
+                    "obj": str(obj_path),
+                    "gltf": str(gltf_path),
+                },
+            },
+            fmt="json",
+        )
 
 
 if __name__ == "__main__":

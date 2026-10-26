@@ -180,6 +180,138 @@ export interface DatabaseStats {
   }>;
 }
 
+export interface RoomPlanItem {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+  w: number;
+  d: number;
+  area_sqm: number;
+  tatami_jo: number;
+  color: string;
+}
+
+export interface FloorPlanData {
+  floor_number: number;
+  name_jp: string;
+  z_bottom_m: number;
+  z_top_m: number;
+  floor_area_sqm: number;
+  rooms: RoomPlanItem[];
+  doors: Array<{
+    x: number;
+    y: number;
+    radius: number;
+    start_deg: number;
+    end_deg: number;
+    label: string;
+  }>;
+  windows: Array<{
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    label: string;
+  }>;
+  fixtures: Array<{
+    type: string;
+    x: number;
+    y: number;
+    w: number;
+    d: number;
+  }>;
+  pillars: number[][];
+}
+
+export interface SolarProfileItem {
+  season: string;
+  hour_jst: number;
+  solar_altitude_deg: number;
+  solar_azimuth_south_deg: number;
+  shadow_length_per_height: number;
+  shadow_vector_xy: [number, number];
+  shadow_polygon_xy: number[][];
+}
+
+export interface ArchitecturalModelData {
+  mode: "property";
+  title: string;
+  address: string;
+  coordinates: { latitude: number; longitude: number };
+  site: {
+    land_area_sqm: number;
+    land_area_tsubo: number;
+    lot_width_m: number;
+    lot_depth_m: number;
+    setback_m: number;
+    road_width_m: number;
+    road_direction: string;
+    building_coverage_ratio_pct: number;
+    floor_area_ratio_pct: number;
+    effective_floor_area_ratio_pct: number;
+    lot_bounds: [number, number, number, number];
+    building_bounds: [number, number, number, number];
+  };
+  building: {
+    stories: number;
+    story_height_m: number;
+    total_height_m: number;
+    building_width_m: number;
+    building_depth_m: number;
+    footprint_area_sqm: number;
+    total_floor_area_sqm: number;
+    floor_plan_type: string;
+    floors: FloorPlanData[];
+  };
+  slant_envelope: {
+    road_slant_limit_m: number;
+    north_slant_limit_m: number;
+    max_legal_height_m: number;
+    vertices_3d: number[][];
+  };
+  solar_simulation: Record<string, SolarProfileItem[]>;
+}
+
+export interface Urban3DSceneData {
+  mode: "urban";
+  coordinates: { latitude: number; longitude: number };
+  radius_m: number;
+  terrain: {
+    center: { latitude: number; longitude: number; elevation_m: number };
+    source: string;
+    zoom: number;
+    grid_size: number;
+    span_m: number;
+    min_elevation_m: number;
+    max_elevation_m: number;
+    x_coords: number[];
+    y_coords: number[];
+    elevations: number[][];
+    contours: Array<{
+      elevation_m: number;
+      segments: number[][][];
+    }>;
+  };
+  buildings_count: number;
+  roads_count: number;
+  buildings: Array<{
+    id: number;
+    name: string;
+    levels: number;
+    height_m: number;
+    base_elevation_m: number;
+    footprint_xy: number[][];
+  }>;
+  roads: Array<{
+    id: number;
+    name: string;
+    type: string;
+    width_m: number;
+    centerline_xy: number[][];
+  }>;
+}
+
 /**
  * 金額（円）を純日本語の億・万円表記へ変換する
  */

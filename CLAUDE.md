@@ -15,6 +15,8 @@
 - `record_agent_property_evaluation`: `claude` / `codex` / `antigravity` として物件の評価スコア（0〜100点）、推奨判定、強み・懸念点・所見をDBおよびWeb UIへ記録します。
 - `manage_watchlist_tool`: 重点調査案件リストへの物件追加・一覧取得を行います。
 - `compare_properties_tool`: 複数物件の横断比較レポート（Markdown表＋JSON）を生成します。
+- `generate_property_floorplan_and_3d_tool`: 物件または敷地の詳細な2D建築配置図・各階間取り平面図（SVG / DXF）および斜線制限・日影軌道付き3D建築モデル（OBJ / glTF 2.0）を生成します。
+- `generate_japan_urban_and_terrain_3d_tool`: 国土地理院DEM標高タイルと公式ベクトルタイルから日本全国の指定座標周辺の等高線・道路網・実在建物3D都市モデル（SVG / DXF / OBJ / glTF 2.0）を生成します。
 - `sync_with_web_ui`: 人間がWeb UIで選択中の物件や地図範囲を読み取り、またはエージェント側の注目物件へWeb UIの地図フォーカスを移動します。
 
 ## 2. CLI経由でのネイティブ呼び出し（Codex CLI / Claude Code / Antigravity ターミナル実行用）
@@ -43,6 +45,12 @@ uv run python cli.py simulate-yield --price 85000000 --monthly-rent 480000 --dow
 
 # Web UIの現在の選択状態・ハイライト連動
 uv run python cli.py ui-context --highlight-ids 4 17 --agent claude --message "港区の注目売地2件をピックアップしました"
+
+# 個別敷地の2D詳細平面図・3D建物モデル・斜線制限・日影生成（SVG/DXF/OBJ/glTF出力）
+uv run python cli.py generate-cad3d --property-id 4 --stories 3 --floor-plan 4LDK --agent claude
+
+# 国土地理院標高メッシュ・等高線・実在建物群の2D都市平面図＆3D都市地形モデル生成
+uv run python cli.py generate-urban3d --property-id 4 --radius 240 --agent claude
 ```
 
 ## 3. Web UI / API サーバーの起動

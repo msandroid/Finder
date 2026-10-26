@@ -35,6 +35,14 @@ from backend.analyzer import (
     simulate_investment_yield,
     simulate_land_building_volume,
 )
+from backend.cad_3d_engine import (
+    export_dxf_file,
+    export_gltf_file,
+    export_obj_file,
+    export_property_svg,
+    fetch_urban_3d_scene,
+    generate_architectural_model,
+)
 from backend.main import app
 import mcp_server
 
@@ -158,3 +166,62 @@ def test_database_mcp_and_fastapi_endpoints():
     r_props = client.get("/api/properties?prefecture_code=13&only_undervalued=true")
     assert r_props.status_code == 200
     assert r_props.json()["count"] > 0
+
+
+@pytest.mark.asyncio
+async def test_cad_floorplan_and_3d_models():
+    # 1. 個別敷地・建築2D平面図および3Dモデル・斜線制限・日影計算検証
+    model = generate_architectural_model(
+        land_area_sqm=120.0,
+        building_coverage_ratio=60.0,
+        floor_area_ratio=200.0,
+        road_width_m=5.4,
+        road_direction="南",
+        stories=3,
+        floor_plan_type="4LDK",
+        latitude=35.6645,
+        longitude=139.7385,
+        title="港区六本木計画敷地",
+    )
+    assert model["building"]["stories"] == 3
+    assert len(model["building"]["floors"]) == 3
+    assert len(model["slant_envelope"]["vertices_3d"]) == 10
+    assert "冬至" in model["solar_simulation"]
+    assert len(model["solar_simulation"]["冬至"]) >= 5
+
+    svg_1f = export_property_svg(model, floor_number=1)
+    assert "<svg" in svg_1f and "敷地間口" in svg_1f
+    dxf_path = export_dxf_file(model, "test_prop.dxf")
+    obj_path = export_obj_file(model, "test_prop.obj")
+    gltf_path = export_gltf_file(model, "test_prop.gltf")
+    assert dxf_path.exists() and dxf_path.stat().st_size > 100
+    assert obj_path.exists() and obj_path.stat().st_size > 100
+    assert gltf_path.exists() and gltf_path.stat().st_size > 100
+
+    # 2. 国土地理院DEM標高メッシュ・等高線・ベクトルタイル実在建物3D抽出検証
+    urban = await fetch_urban_3d_scene(lat=35.6645, lon=139.7385, radius_m=220, zoom=15)
+    assert urban["terrain"]["grid_size"] >= 18
+    assert urban["buildings_count"] > 10
+    assert urban["roads_count"] > 5
+
+    # 3. FastAPI /api/cad3d/* エンドポイント検証
+    client = TestClient(app)
+    r_cad_prop = client.post(
+        "/api/cad3d/property",
+        json={"property_id": 4, "stories": 3, "agent_name": "antigravity"},
+    )
+    assert r_cad_prop.status_code == 200
+    cad_prop_data = r_cad_prop.json()
+    assert cad_prop_data["model"]["building"]["stories"] == 3
+    assert "1" in cad_prop_data["floor_svgs"]
+
+    r_cad_urban = client.post(
+        "/api/cad3d/urban",
+        json={"property_id": 4, "radius_m": 220, "agent_name": "antigravity"},
+    )
+    assert r_cad_urban.status_code == 200
+    assert r_cad_urban.json()["urban"]["buildings_count"] > 10
+
+    r_dl = client.get("/api/cad3d/download/property_model.gltf")
+    assert r_dl.status_code == 200
+

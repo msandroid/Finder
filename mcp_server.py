@@ -33,6 +33,16 @@ from backend.analyzer import (
     simulate_investment_yield,
     simulate_land_building_volume,
 )
+from backend.cad_3d_engine import (
+    EXPORT_DIR,
+    export_dxf_file,
+    export_gltf_file,
+    export_obj_file,
+    export_property_svg,
+    export_urban_svg,
+    fetch_urban_3d_scene,
+    generate_architectural_model,
+)
 
 mcp = FastMCP(
     "jp-property-finder",
@@ -332,6 +342,144 @@ def sync_with_web_ui(
             "ui_sync_state": state,
             "selected_properties_detail": selected_props,
             "database_stats": get_database_stats(),
+        },
+        ensure_ascii=False,
+        indent=2,
+    )
+
+
+@mcp.tool()
+def generate_property_floorplan_and_3d_tool(
+    property_id: Optional[int] = None,
+    land_area_sqm: float = 110.0,
+    building_coverage_ratio: float = 60.0,
+    floor_area_ratio: float = 200.0,
+    road_width_m: float = 5.4,
+    road_direction: str = "南",
+    stories: Optional[int] = None,
+    agent_name: str = "antigravity",
+) -> str:
+    """
+    指定した物件番号（ID）または敷地条件から、
+    1. 2D詳細敷地配置図・各階間取り平面図（SVGファイルおよびAutoCAD DXFファイル）
+    2. 3D建物モデル・斜線制限エンクロージャ・冬至/夏至日影シミュレーション（Wavefront OBJおよびglTF 2.0ファイル）
+    を一括生成し、出力ファイルパスと構造データを返します。
+    """
+    init_db()
+    title = "標準敷地・建築計画モデル"
+    address = "東京都港区"
+    lat, lon = 35.6586, 139.7454
+    if property_id is not None:
+        prop = get_property_by_id(property_id)
+        if prop:
+            land_area_sqm = prop.get("land_area_sqm") or prop.get("building_area_sqm") or land_area_sqm
+            building_coverage_ratio = prop.get("building_coverage_ratio") or building_coverage_ratio
+            floor_area_ratio = prop.get("floor_area_ratio") or floor_area_ratio
+            lat = prop.get("latitude") or lat
+            lon = prop.get("longitude") or lon
+            title = prop.get("title") or title
+            address = prop.get("address") or address
+
+    model = generate_architectural_model(
+        land_area_sqm=land_area_sqm,
+        building_coverage_ratio=building_coverage_ratio,
+        floor_area_ratio=floor_area_ratio,
+        road_width_m=road_width_m,
+        road_direction=road_direction,
+        stories=stories,
+        latitude=lat,
+        longitude=lon,
+        title=title,
+        address=address,
+    )
+    svg_paths = []
+    for fl in model["building"]["floors"]:
+        fnum = fl["floor_number"]
+        p = EXPORT_DIR / f"property_floor_{fnum}.svg"
+        p.write_text(export_property_svg(model, floor_number=fnum), encoding="utf-8")
+        svg_paths.append(str(p))
+
+    dxf_path = export_dxf_file(model, "property_plan.dxf")
+    obj_path = export_obj_file(model, "property_model.obj")
+    gltf_path = export_gltf_file(model, "property_model.gltf")
+
+    record_agent_activity(
+        agent_name=agent_name,
+        action="2D建築平面図・3Dモデル出力",
+        summary=f"「{title}」の2D平面図（SVG/DXF）と3D建築モデル（OBJ/glTF）を生成しました。",
+        highlighted_property_ids=[property_id] if property_id else [],
+    )
+    return json.dumps(
+        {
+            "title": title,
+            "address": address,
+            "site": model["site"],
+            "building_summary": {
+                "stories": model["building"]["stories"],
+                "total_height_m": model["building"]["total_height_m"],
+                "footprint_area_sqm": model["building"]["footprint_area_sqm"],
+                "total_floor_area_sqm": model["building"]["total_floor_area_sqm"],
+            },
+            "exported_files": {
+                "svg_files": svg_paths,
+                "dxf_file": str(dxf_path),
+                "obj_file": str(obj_path),
+                "gltf_file": str(gltf_path),
+            },
+        },
+        ensure_ascii=False,
+        indent=2,
+    )
+
+
+@mcp.tool()
+async def generate_japan_urban_and_terrain_3d_tool(
+    property_id: Optional[int] = None,
+    latitude: float = 35.6586,
+    longitude: float = 139.7454,
+    radius_m: int = 220,
+    zoom: int = 15,
+    agent_name: str = "antigravity",
+) -> str:
+    """
+    日本全国の任意座標または物件番号（ID）周辺について、
+    国土地理院の実測標高タイル（DEM）とOpenStreetMapの実在建物群・道路網から
+    2D街区・等高線CAD平面図（SVG/DXF）および3D都市・地形モデル（OBJ/glTF 2.0）を生成します。
+    """
+    init_db()
+    if property_id is not None:
+        prop = get_property_by_id(property_id)
+        if prop and prop.get("latitude") and prop.get("longitude"):
+            latitude = prop["latitude"]
+            longitude = prop["longitude"]
+
+    urban = await fetch_urban_3d_scene(lat=latitude, lon=longitude, radius_m=radius_m, zoom=zoom)
+    svg_path = EXPORT_DIR / "urban_plan.svg"
+    svg_path.write_text(export_urban_svg(urban), encoding="utf-8")
+    dxf_path = export_dxf_file(urban, "urban_plan.dxf")
+    obj_path = export_obj_file(urban, "urban_model.obj")
+    gltf_path = export_gltf_file(urban, "urban_model.gltf")
+
+    record_agent_activity(
+        agent_name=agent_name,
+        action="3D都市・地形・2D等高線図生成",
+        summary=f"北緯{latitude:.4f}度・東経{longitude:.4f}度周辺（建物{urban['buildings_count']}棟）の2D平面図と3D都市地形モデルを生成しました。",
+        highlighted_property_ids=[property_id] if property_id else [],
+    )
+    return json.dumps(
+        {
+            "coordinates": urban["coordinates"],
+            "terrain_source": urban["terrain"]["source"],
+            "min_elevation_m": urban["terrain"]["min_elevation_m"],
+            "max_elevation_m": urban["terrain"]["max_elevation_m"],
+            "buildings_count": urban["buildings_count"],
+            "roads_count": urban["roads_count"],
+            "exported_files": {
+                "svg_file": str(svg_path),
+                "dxf_file": str(dxf_path),
+                "obj_file": str(obj_path),
+                "gltf_file": str(gltf_path),
+            },
         },
         ensure_ascii=False,
         indent=2,

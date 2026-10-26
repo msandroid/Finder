@@ -41,6 +41,16 @@ from backend.analyzer import (
     simulate_investment_yield,
     simulate_land_building_volume,
 )
+from backend.cad_3d_engine import (
+    EXPORT_DIR,
+    export_dxf_file,
+    export_gltf_file,
+    export_obj_file,
+    export_property_svg,
+    export_urban_svg,
+    fetch_urban_3d_scene,
+    generate_architectural_model,
+)
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):
@@ -156,6 +166,31 @@ class UISyncUpdateRequest(BaseModel):
     key: str
     value: Any
     notify_agents: bool = True
+
+
+class PropertyCad3DRequest(BaseModel):
+    property_id: Optional[int] = None
+    land_area_sqm: Optional[float] = None
+    building_coverage_ratio: Optional[float] = None
+    floor_area_ratio: Optional[float] = None
+    road_width_m: float = 5.4
+    road_direction: str = "南"
+    stories: Optional[int] = None
+    floor_plan_type: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    title: Optional[str] = None
+    address: Optional[str] = None
+    agent_name: Optional[str] = None
+
+
+class UrbanCad3DRequest(BaseModel):
+    property_id: Optional[int] = None
+    latitude: float = 35.6586
+    longitude: float = 139.7454
+    radius_m: int = 220
+    zoom: int = 15
+    agent_name: Optional[str] = None
 
 
 @app.get("/api/health")
@@ -415,6 +450,141 @@ async def simulate_yield_endpoint(req: YieldSimRequest) -> Dict[str, Any]:
 @app.post("/api/compare")
 async def compare_properties_endpoint(req: CompareRequest) -> Dict[str, Any]:
     return generate_comparison_report(req.property_ids)
+
+
+@app.post("/api/cad3d/property")
+async def generate_property_cad3d_endpoint(req: PropertyCad3DRequest) -> Dict[str, Any]:
+    prop = get_property_by_id(req.property_id) if req.property_id is not None else None
+
+    land_area = (
+        req.land_area_sqm
+        or (prop.get("land_area_sqm") if prop else None)
+        or (prop.get("building_area_sqm") if prop else None)
+        or 110.0
+    )
+    cov = (
+        req.building_coverage_ratio
+        or (prop.get("building_coverage_ratio") if prop else None)
+        or 60.0
+    )
+    far = (
+        req.floor_area_ratio
+        or (prop.get("floor_area_ratio") if prop else None)
+        or 200.0
+    )
+    lat = req.latitude or (prop.get("latitude") if prop else None) or 35.6586
+    lon = req.longitude or (prop.get("longitude") if prop else None) or 139.7454
+    title = req.title or (prop.get("title") if prop else None) or "標準敷地・建築計画モデル"
+    address = req.address or (prop.get("address") if prop else None) or "東京都港区"
+    floor_plan = req.floor_plan_type or (prop.get("floor_plan") if prop else None) or "3LDK"
+
+    model = generate_architectural_model(
+        land_area_sqm=land_area,
+        building_coverage_ratio=cov,
+        floor_area_ratio=far,
+        road_width_m=req.road_width_m,
+        road_direction=req.road_direction,
+        stories=req.stories,
+        floor_plan_type=floor_plan,
+        latitude=lat,
+        longitude=lon,
+        title=title,
+        address=address,
+    )
+
+    floor_svgs: Dict[int, str] = {}
+    for fl in model["building"]["floors"]:
+        fnum = fl["floor_number"]
+        svg_str = export_property_svg(model, floor_number=fnum)
+        floor_svgs[fnum] = svg_str
+        (EXPORT_DIR / f"property_floor_{fnum}.svg").write_text(svg_str, encoding="utf-8")
+
+    export_dxf_file(model, "property_plan.dxf")
+    export_obj_file(model, "property_model.obj")
+    export_gltf_file(model, "property_model.gltf")
+
+    if req.agent_name:
+        record_agent_activity(
+            agent_name=req.agent_name,
+            action="平面図・立体建築モデル生成",
+            summary=f"「{title}」（敷地{land_area}平米・地上{model['building']['stories']}階建）の平面図と立体モデルを生成しました。",
+            highlighted_property_ids=[req.property_id] if req.property_id else [],
+        )
+        await ws_manager.broadcast({
+            "type": "CAD3D_GENERATED",
+            "mode": "property",
+            "ui_sync_state": get_ui_sync_state(),
+        })
+
+    return {
+        "model": model,
+        "floor_svgs": floor_svgs,
+        "downloads": {
+            "svg_floor_1": "/api/cad3d/download/property_floor_1.svg",
+            "dxf": "/api/cad3d/download/property_plan.dxf",
+            "obj": "/api/cad3d/download/property_model.obj",
+            "gltf": "/api/cad3d/download/property_model.gltf",
+        },
+    }
+
+
+@app.post("/api/cad3d/urban")
+async def generate_urban_cad3d_endpoint(req: UrbanCad3DRequest) -> Dict[str, Any]:
+    lat = req.latitude
+    lon = req.longitude
+    if req.property_id is not None:
+        prop = get_property_by_id(req.property_id)
+        if prop and prop.get("latitude") and prop.get("longitude"):
+            lat = prop["latitude"]
+            lon = prop["longitude"]
+
+    urban = await fetch_urban_3d_scene(
+        lat=lat,
+        lon=lon,
+        radius_m=req.radius_m,
+        zoom=req.zoom,
+    )
+    svg_str = export_urban_svg(urban)
+    (EXPORT_DIR / "urban_plan.svg").write_text(svg_str, encoding="utf-8")
+    export_dxf_file(urban, "urban_plan.dxf")
+    export_obj_file(urban, "urban_model.obj")
+    export_gltf_file(urban, "urban_model.gltf")
+
+    if req.agent_name:
+        record_agent_activity(
+            agent_name=req.agent_name,
+            action="都市・地形・等高線立体モデル生成",
+            summary=(
+                f"北緯{lat:.4f}度・東経{lon:.4f}度周辺（実在建物{urban['buildings_count']}棟）の"
+                f"街区等高線図および都市地形立体モデルを生成しました。"
+            ),
+            highlighted_property_ids=[req.property_id] if req.property_id else [],
+        )
+        await ws_manager.broadcast({
+            "type": "CAD3D_GENERATED",
+            "mode": "urban",
+            "ui_sync_state": get_ui_sync_state(),
+        })
+
+    return {
+        "urban": urban,
+        "svg": svg_str,
+        "downloads": {
+            "svg": "/api/cad3d/download/urban_plan.svg",
+            "dxf": "/api/cad3d/download/urban_plan.dxf",
+            "obj": "/api/cad3d/download/urban_model.obj",
+            "gltf": "/api/cad3d/download/urban_model.gltf",
+        },
+    }
+
+
+@app.get("/api/cad3d/download/{filename}")
+async def download_cad3d_file(filename: str):
+    safe_name = Path(filename).name
+    file_path = EXPORT_DIR / safe_name
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="指定された出力ファイルが見つかりません。")
+    return FileResponse(str(file_path), filename=safe_name)
 
 
 @app.get("/api/ui-sync")
