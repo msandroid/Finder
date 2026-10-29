@@ -45,6 +45,8 @@ test('japan-prop のプラグイン定義が MCP サーバーとスキルを指�
     assert.ok(existsSync(join(ROOT, 'japan-prop', codex.skills, skill, 'SKILL.md')), skill);
   }
   assert.ok(existsSync(join(ROOT, 'japan-prop/mcp_server.py')));
+  const agent = readFileSync(join(ROOT, 'japan-prop/agents/property-researcher.md'), 'utf8');
+  assert.match(agent, /^model: haiku$/m, 'property-researcher は Haiku で動く');
 
   const entry = marketplacePlugin('.claude-plugin/marketplace.json', 'japan-prop');
   assert.equal(entry.source, './japan-prop');
