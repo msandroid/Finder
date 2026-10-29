@@ -41,7 +41,9 @@ test('japan-prop のプラグイン定義が MCP サーバーとスキルを指�
     assert.ok(manifest.mcpServers['jp-property-finder'].args.includes('mcp_server.py'));
   }
   assert.ok(claude.mcpServers['jp-property-finder'].args.includes('${CLAUDE_PLUGIN_ROOT}'));
-  assert.ok(existsSync(join(ROOT, 'japan-prop', codex.skills, 'japan-rental-search/SKILL.md')));
+  for (const skill of ['japan-rental-search', 'property-research']) {
+    assert.ok(existsSync(join(ROOT, 'japan-prop', codex.skills, skill, 'SKILL.md')), skill);
+  }
   assert.ok(existsSync(join(ROOT, 'japan-prop/mcp_server.py')));
 
   const entry = marketplacePlugin('.claude-plugin/marketplace.json', 'japan-prop');

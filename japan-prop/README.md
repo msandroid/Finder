@@ -6,6 +6,10 @@
 
 ## 主な機能
 
+0. **調査ハーネス（`research_properties` / `cli.py research`）**
+   - 物件探しの手順を毎回同じ流れで実行します: 条件の正規化（人数→面積など）→ エリアごとのライブ検索（失敗時はDBの過去データで継続）→ 必須条件での絞り込み → 採点 → 掲載データの欠落・矛盾の検出。
+   - 報告には、置いた前提、収集状況とデータの日付、条件ごとの除外件数、候補（点数・理由・要確認事項）、候補のない範囲、内見での確認事項、非公開物件の注意、次にやることが入ります。
+   - 用途（住まい / オフィス / ソフトウェア開発オフィス）ごとに採点の重みと確認事項が変わります。
 1. **複数ポータル横断リアルタイム検索・自動名寄せ統合**
    - スーモ（売地・中古戸建・新築戸建・中古マンション・賃貸）、ヤフー不動産、ニフティ不動産（LIFULL HOME'S・アットホーム等統合）を並列検索。
    - 町丁目・面積・価格帯に基づく正規化ハッシュにより、複数サイトに重複掲載された同一物件を自動名寄せし、価格変動履歴を記録。
@@ -68,6 +72,9 @@ uv run python start.py
 ### 3. CLI からの実行例
 
 ```powershell
+# 調査ハーネス：条件の正規化・横断収集・絞り込み・採点・検証をまとめて実行（--offline でDBのみ）
+uv run python cli.py research --prefecture 北海道 --municipality 札幌市中央区 札幌市北区 --category オフィス --use-case software_dev --headcount-min 2 --headcount-max 10
+
 # リアルタイム横断検索＆DB名寄せ統合
 uv run python cli.py search --prefecture 東京都 --municipality 港区 --category 売地 --agent antigravity
 

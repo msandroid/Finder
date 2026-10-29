@@ -10,6 +10,7 @@ from backend.municipalities import (
     resolve_location,
 )
 from backend.connectors.aggregator import live_search_and_sync
+from backend.research import ResearchRequirements, render_markdown, run_research
 from backend.connectors.gsi_gov import (
     analyze_hazard_and_topography,
     fetch_surrounding_facilities,
@@ -179,9 +180,47 @@ def main() -> None:
     p_urb.add_argument("--zoom", type=int, default=15, help="国土地理院標高タイルズームレベル（9〜15）")
     p_urb.add_argument("--agent", default="antigravity")
 
+    p_res = subparsers.add_parser("research", help="条件の正規化・横断収集・絞り込み・採点・検証をまとめて行い、調査報告を出力")
+    p_res.add_argument("--prefecture", default="東京都")
+    p_res.add_argument("--municipality", nargs="*", default=[], help="対象の市区町村（複数可）")
+    p_res.add_argument("--category", default="賃貸")
+    p_res.add_argument("--use-case", default="residence", choices=["residence", "office", "software_dev"])
+    p_res.add_argument("--headcount-min", type=int)
+    p_res.add_argument("--headcount-max", type=int)
+    p_res.add_argument("--min-area", type=float)
+    p_res.add_argument("--max-area", type=float)
+    p_res.add_argument("--max-monthly-cost", type=int, help="月額の上限（円）")
+    p_res.add_argument("--max-walk", type=int)
+    p_res.add_argument("--must-have", nargs="*", default=[])
+    p_res.add_argument("--exclude", nargs="*", default=[])
+    p_res.add_argument("--limit", type=int, default=10)
+    p_res.add_argument("--offline", action="store_true", help="ライブ検索をせず、DBの蓄積データだけで調査する")
+    p_res.add_argument("--format", choices=["markdown", "json"], default="markdown")
+
     args = parser.parse_args()
 
-    if args.command == "search":
+    if args.command == "research":
+        req = ResearchRequirements(
+            prefecture=args.prefecture,
+            municipalities=args.municipality,
+            category=args.category,
+            use_case=args.use_case,
+            headcount_min=args.headcount_min,
+            headcount_max=args.headcount_max,
+            min_area_sqm=args.min_area,
+            max_area_sqm=args.max_area,
+            max_monthly_cost=args.max_monthly_cost,
+            max_walk_min=args.max_walk,
+            must_have=args.must_have,
+            exclude=args.exclude,
+            shortlist_size=args.limit,
+        )
+        report = asyncio.run(run_research(req, live=not args.offline))
+        if args.format == "markdown":
+            report["markdown_report"] = render_markdown(report)
+        _print_output(report, fmt=args.format)
+
+    elif args.command == "search":
         res = asyncio.run(
             live_search_and_sync(
                 prefecture=args.prefecture,
