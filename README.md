@@ -197,6 +197,33 @@ node scripts/build-data.js <source> [--only a,b] [--from 2021] [--to 2026] [--ou
 
 出力先は環境変数 `REALESTATE_DATA_DIR` でも変えられます。この変数はサーバーの読み込み先にも使います。
 
+## japan-prop（日本の物件横断検索）
+
+`japan-prop/` には、日本の個別物件を調べる別のアプリを収録しています（元は [msandroid/japan-prop](https://github.com/msandroid/japan-prop)。履歴ごと取り込んであります）。world-realestate-mcp が公的データの相場を返すのに対し、こちらは個別の売り出し物件を扱います。
+
+- スーモ・ヤフー不動産・ニフティ不動産の横断検索と、重複掲載の名寄せ
+- 国土地理院の標高、ハザードマップ、周辺施設の解析
+- 建築ボリュームと投資利回りの試算
+- 2D 平面図・3D モデル（SVG / DXF / OBJ / glTF）の生成
+- MCP サーバー（`jp-property-finder`）、CLI、Web UI
+
+Python 3.11 以上と [uv](https://docs.astral.sh/uv/) で動きます。実行時にネットワークが必要です。
+
+```bash
+cd japan-prop
+uv run python start.py   # Web UI（http://127.0.0.1:8000）。先に frontend/ で npm install && npm run build
+uv run python cli.py --help
+uv run pytest -v
+```
+
+MCP サーバーとして登録する場合:
+
+```bash
+claude mcp add jp-property-finder -- uv run --directory /path/to/Finder/japan-prop python mcp_server.py
+```
+
+詳しくは [japan-prop/README.md](japan-prop/README.md) を見てください。world-realestate-mcp のプラグイン・バンドル・テストとは独立しています。
+
 ## 開発
 
 ```bash
