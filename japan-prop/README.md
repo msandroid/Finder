@@ -25,6 +25,27 @@
    - MCPサーバー（`mcp_server.py` / `.mcp.json`）および CLI（`cli.py`）を標準装備。
    - Web UI とエージェント間で選択物件・地図範囲・多角形（ポリゴン）検索範囲・評価スコア（100点満点）・2D平面図/3Dモデルをリアルタイム共有。
 
+## Claude Code・Codex のプラグインとして使う
+
+このフォルダは [msandroid/Finder](https://github.com/msandroid/Finder) のマーケットプレイスに `japan-prop` として登録されています。[uv](https://docs.astral.sh/uv/) が必要です。
+
+```bash
+# Claude Code
+claude plugin marketplace add msandroid/Finder
+claude plugin install japan-prop@world-realestate
+
+# Codex（追加後に /plugins から japan-prop をインストール）
+codex plugin marketplace add msandroid/Finder
+```
+
+Claude Code のセッション内では `/plugin install japan-prop --marketplace msandroid/Finder` でも入れられます。MCP サーバー `jp-property-finder` と、賃貸探し用のスキル `japan-rental-search` が使えるようになります。
+
+## 非公開物件について
+
+日本では、ポータルサイトに載っている物件がすべてではありません。不動産事業者（宅地建物取引業者）しか閲覧できない**非公開物件**があります。たとえば、業者向けの物件情報システム（レインズなど）にだけ登録されている物件、貸主・売主の意向で広告に出さない物件、管理会社や地元の不動産会社が直接扱う物件です。
+
+このツールで検索できるのはポータルサイトに掲載された物件だけです。非公開物件も含めて探したいときは、希望エリアの不動産会社に条件を伝えて紹介してもらってください。
+
 ## セットアップと起動方法
 
 ### 1. フロントエンドのビルド（初回のみ）

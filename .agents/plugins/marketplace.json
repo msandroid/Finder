@@ -1,9 +1,20 @@
 {
   "name": "world-realestate",
   "interface": {
-    "displayName": "世界の不動産相場"
+    "displayName": "日本の不動産・賃貸探しと世界の不動産相場"
   },
   "plugins": [
+    {
+      "name": "japan-prop",
+      "source": {
+        "source": "local",
+        "path": "./japan-prop"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Research"
+    },
     {
       "name": "world-realestate",
       "source": {

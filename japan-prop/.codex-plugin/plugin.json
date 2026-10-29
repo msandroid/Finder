@@ -1,0 +1,36 @@
+{
+  "name": "japan-prop",
+  "version": "1.0.0",
+  "description": "日本の不動産・賃貸探し。スーモ・ヤフー不動産・ニフティ不動産の賃貸・売買物件を横断検索して名寄せし、ハザードマップ・周辺施設・利回りなどを調べる MCP サーバー。ポータルに載らない非公開物件（不動産事業者のみ閲覧可）は対象外",
+  "author": {
+    "name": "msandroid"
+  },
+  "repository": "https://github.com/msandroid/Finder",
+  "license": "MIT",
+  "keywords": [
+    "real-estate",
+    "rental",
+    "chintai",
+    "japan",
+    "suumo",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": {
+    "jp-property-finder": {
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "mcp_server.py"
+      ],
+      "cwd": "."
+    }
+  },
+  "interface": {
+    "displayName": "日本の不動産・賃貸探し",
+    "shortDescription": "賃貸・売買物件をポータル横断で探し、災害リスクや周辺環境まで調べる",
+    "developerName": "msandroid",
+    "category": "Research"
+  }
+}
