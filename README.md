@@ -1,4 +1,80 @@
-# world-realestate-mcp
+# Finder: 日本の不動産・賃貸探し
+
+LLM から日本の賃貸・売買物件を探せる、Claude Code と Codex のプラグインです。同じマーケットプレイスに2つのプラグインがあります。
+
+| プラグイン | 内容 | 場所 |
+| --- | --- | --- |
+| **`japan-prop`**（メイン） | 日本の賃貸・売買物件をポータルサイト横断で探し、災害リスクや周辺環境まで調べる | `japan-prop/` |
+| `world-realestate` | 公的オープンデータによる世界の不動産相場（取引価格・住宅価格指数・家賃指数） | リポジトリ直下 |
+
+## 日本の不動産・賃貸探し（japan-prop）
+
+- スーモ・ヤフー不動産・ニフティ不動産の賃貸・売買物件（賃貸、マンション、戸建て、売地、空き家、収益物件）を横断検索し、重複掲載をまとめる
+- 家賃・価格、駅徒歩、面積、周辺相場との乖離（割安度）で絞り込み・並べ替え
+- 国土地理院の標高と、国土交通省ハザードマップ（洪水・津波・土砂災害）による災害リスクの確認
+- 半径800m以内の駅・スーパー・病院・学校・公園までの距離
+- 物件どうしの比較表、ウォッチリスト
+- 売買物件向けに、建築ボリュームと投資利回りの試算、2D 平面図・3D モデルの生成
+
+賃貸探し用のスキル（`japan-rental-search`）も入っています。希望条件の聞き取りから、検索、災害リスクの確認、比較までを順に進めます。
+
+> **非公開物件について**
+>
+> 日本では、ポータルサイトに載っている物件がすべてではありません。不動産事業者（宅地建物取引業者）しか閲覧できない**非公開物件**があります。
+>
+> - 業者向けの物件情報システム（レインズなど）にだけ登録されている物件
+> - 貸主・売主の意向で広告に出さない物件
+> - 管理会社や地元の不動産会社が直接扱う物件
+>
+> このプラグインで検索できるのはポータルサイトに掲載された物件だけです。非公開物件も含めて探したいときは、希望エリアの不動産会社に条件を伝えて紹介してもらってください。
+
+LLM への質問の例:
+
+- 「品川区か目黒区で、家賃12万円以下、駅徒歩10分以内の1LDKを探して」
+- 「この3件を、浸水リスクと周辺施設も含めて比べて」
+- 「港区の売地を、周辺相場より割安な順に」
+
+### 必要なもの
+
+- [uv](https://docs.astral.sh/uv/)（Python 3.11 以上は uv が用意します）
+- 実行時のネットワーク接続（ポータルサイトと国土地理院などの API を使います）
+
+### Claude Code
+
+```bash
+claude plugin marketplace add msandroid/Finder
+claude plugin install japan-prop@world-realestate
+```
+
+セッション内では `/plugin marketplace add msandroid/Finder` のあと `/plugin install japan-prop@world-realestate` でも入れられます。定義は `japan-prop/.claude-plugin/plugin.json` にあります。
+
+### Codex
+
+```bash
+codex plugin marketplace add msandroid/Finder
+```
+
+追加したら Codex で `/plugins` を開き、`japan-prop` をインストールします。定義は `japan-prop/.codex-plugin/plugin.json` と `.agents/plugins/marketplace.json` にあります。
+
+### プラグインを使わずに登録する
+
+```bash
+git clone https://github.com/msandroid/Finder
+claude mcp add jp-property-finder -- uv run --directory /path/to/Finder/japan-prop python mcp_server.py
+```
+
+### Web UI・CLI
+
+```bash
+cd japan-prop
+uv run python start.py   # Web UI（http://127.0.0.1:8000）。先に frontend/ で npm install && npm run build
+uv run python cli.py --help
+uv run pytest -v
+```
+
+詳しくは [japan-prop/README.md](japan-prop/README.md) を見てください。元のリポジトリは [msandroid/japan-prop](https://github.com/msandroid/japan-prop) で、履歴ごと取り込んであります。
+
+## 世界の不動産相場（world-realestate）
 
 世界の不動産相場を LLM から調べられる MCP サーバーです。各国の公的オープンデータを集計したデータを同梱しています。
 
@@ -12,9 +88,9 @@
 - Claude Code・Codex・Cursor のプラグインとして入れられ、任意の MCP クライアントにも登録できます。
 - データは GitHub Actions が毎月自動で更新します。
 
-## 収録データ
+### 収録データ
 
-### 取引データ
+#### 取引データ
 
 | 国 | 出典 | 地域 / 市区町村 / 地区 | 種別 | ㎡単価 | API キー |
 | --- | --- | --- | --- | --- | --- |
@@ -33,7 +109,7 @@
   - 台湾: 親族間など特殊な事情のある取引
   - 韓国: 解除された取引
 
-### 指標データ（国別・四半期）
+#### 指標データ（国別・四半期）
 
 | 出典 | 内容 | 対象 |
 | --- | --- | --- |
@@ -43,7 +119,7 @@
 
 米国は、全国規模の取引データが公開されていないため指標だけです。
 
-## ツール
+### ツール
 
 | ツール | 内容 |
 | --- | --- |
@@ -68,11 +144,11 @@ LLM への質問の例:
 - 「家賃が直近1年でいちばん上がった国は？」
 - 「米国で住宅価格の5年上昇率が高い州」
 
-## インストール
+### インストール
 
 サーバー本体は `dist/world-realestate-mcp.mjs` の1ファイルです。
 
-### Claude Code（プラグイン）
+#### Claude Code（プラグイン）
 
 ```bash
 claude plugin marketplace add msandroid/Finder
@@ -81,7 +157,7 @@ claude plugin install world-realestate@world-realestate
 
 セッション内で `/plugin marketplace add msandroid/Finder` から入れることもできます。定義は `.claude-plugin/` にあります。
 
-### Codex（プラグイン）
+#### Codex（プラグイン）
 
 ```bash
 codex plugin marketplace add msandroid/Finder
@@ -89,7 +165,7 @@ codex plugin marketplace add msandroid/Finder
 
 追加したら Codex で `/plugins` を開き、`world-realestate` をインストールします。定義は `.codex-plugin/plugin.json` と `.agents/plugins/marketplace.json` にあります。
 
-### Cursor（プラグイン）
+#### Cursor（プラグイン）
 
 定義は `.cursor-plugin/plugin.json` にあります。ローカルで使う場合は、リポジトリを `~/.cursor/plugins/local/` に置いて Cursor を再読み込みします（**Developer: Reload Window**）。
 
@@ -99,7 +175,7 @@ git clone https://github.com/msandroid/Finder ~/.cursor/plugins/local/world-real
 
 チームで配布する場合は、Cursor の team marketplace にこのリポジトリを登録します。
 
-### MCP サーバーとして直接登録する
+#### MCP サーバーとして直接登録する
 
 ```bash
 git clone https://github.com/msandroid/Finder world-realestate-mcp
@@ -138,14 +214,14 @@ command = "node"
 args = ["/path/to/world-realestate-mcp/dist/world-realestate-mcp.mjs"]
 ```
 
-### データの更新を取り込む
+#### データの更新を取り込む
 
 データは毎月このリポジトリにコミットされます。
 
 - プラグインで入れた場合: 各クライアントで marketplace を更新します（例: `claude plugin marketplace update world-realestate`、`codex plugin marketplace upgrade`）。
 - clone した場合: `git pull` します。
 
-## データ
+### データ
 
 ```
 data/
@@ -163,7 +239,7 @@ data/
 - 地区名が `""` の行は、市区町村全体の集計です。
 - 期間は `"2024"`（年）または `"2024Q1"`（四半期）です。年の値は四半期の値から計算しているのではなく、その年の全取引から直接集計しています。
 
-### 自動更新
+#### 自動更新
 
 `.github/workflows/refresh-data.yml` は毎月5日 12:00（日本時間）に全データを取得し直し、`data/` の変更をコミットします。
 
@@ -179,7 +255,7 @@ Secrets の登録（**Settings → Secrets and variables → Actions**）:
 
 **Actions → refresh-data → Run workflow** で手動実行もできます。`sources` に `gb,indicators` のように書くと、一部のデータだけ更新できます。
 
-### 手元での生成
+#### 手元での生成
 
 ```bash
 node scripts/build-data.js <source> [--only a,b] [--from 2021] [--to 2026] [--out data]
@@ -218,7 +294,9 @@ npm test
 - 国ごとに定義が違うため、取引データの価格や㎡単価を国の間でそのまま比べるのは適切ではありません。
   - 日本は取引価格、台湾は登記された実価格、シンガポールは公営住宅のみ、韓国はマンションのみです。
   - 国どうしの比較には指標データを使ってください。
-- 家賃の水準（金額）は収録していません。家賃の変化は OECD の家賃指数で国単位で見られます。ポータルサイトのスクレイピングは利用規約上行わない方針です。
+- 家賃の水準（金額）は収録していません。家賃の変化は OECD の家賃指数で国単位で見られます。
+- world-realestate-mcp は公的オープンデータだけを使い、ポータルサイトのスクレイピングは行いません。
+- `japan-prop/` は、スーモ・ヤフー不動産・ニフティ不動産の検索結果を実行時に取得します。使う前に各サイトの利用規約を確認し、アクセスの頻度を抑えてください。取得した物件情報の再配布や商用利用は、各サイトの規約に従ってください。
 - 取引データの対象外:
   - 英国: スコットランドと北アイルランド
   - フランス: アルザス・モゼル地方とマヨット（DVF が収録していないため）

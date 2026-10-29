@@ -13,6 +13,7 @@ import { writeDataset } from '../src/write.js';
 const ROOT = join(import.meta.dirname, '..');
 const BUNDLE = 'dist/world-realestate-mcp.mjs';
 const readJson = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
+const marketplacePlugin = (file, name) => readJson(file).plugins.find((p) => p.name === name);
 
 test('各プラグイン定義がバンドルを指している', () => {
   const version = readJson('package.json').version;
@@ -27,9 +28,26 @@ test('各プラグイン定義がバンドルを指している', () => {
     assert.equal(manifest.version, version, `${file} の version が package.json と一致しない`);
     assert.deepEqual(manifest.mcpServers['world-realestate'].args, [arg], file);
   }
-  assert.equal(readJson('.claude-plugin/marketplace.json').plugins[0].source, './');
-  assert.equal(readJson('.agents/plugins/marketplace.json').plugins[0].source.path, './');
+  assert.equal(marketplacePlugin('.claude-plugin/marketplace.json', 'world-realestate').source, './');
+  assert.equal(marketplacePlugin('.agents/plugins/marketplace.json', 'world-realestate').source.path, './');
   assert.ok(existsSync(join(ROOT, BUNDLE)), 'npm run bundle で dist/ を生成してください');
+});
+
+test('japan-prop のプラグイン定義が MCP サーバーとスキルを指している', () => {
+  const claude = readJson('japan-prop/.claude-plugin/plugin.json');
+  const codex = readJson('japan-prop/.codex-plugin/plugin.json');
+  for (const manifest of [claude, codex]) {
+    assert.equal(manifest.name, 'japan-prop');
+    assert.ok(manifest.mcpServers['jp-property-finder'].args.includes('mcp_server.py'));
+  }
+  assert.ok(claude.mcpServers['jp-property-finder'].args.includes('${CLAUDE_PLUGIN_ROOT}'));
+  assert.ok(existsSync(join(ROOT, 'japan-prop', codex.skills, 'japan-rental-search/SKILL.md')));
+  assert.ok(existsSync(join(ROOT, 'japan-prop/mcp_server.py')));
+
+  const entry = marketplacePlugin('.claude-plugin/marketplace.json', 'japan-prop');
+  assert.equal(entry.source, './japan-prop');
+  assert.equal(entry.version, claude.version);
+  assert.equal(marketplacePlugin('.agents/plugins/marketplace.json', 'japan-prop').source.path, './japan-prop');
 });
 
 test('バンドルは node_modules なしで起動し、同じ結果を返す', async () => {
