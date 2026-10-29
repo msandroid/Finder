@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "jp-property-finder": {
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "mcp_server.py"
+      ]
+    }
+  }
+}
