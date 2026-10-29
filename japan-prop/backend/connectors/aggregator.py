@@ -191,8 +191,11 @@ async def live_search_and_sync(
 
     raw_items: List[Dict[str, Any]] = []
     source_counts: Dict[str, int] = {}
+    source_errors: List[str] = []
     for res in batch_lists:
-        if isinstance(res, list):
+        if isinstance(res, BaseException):
+            source_errors.append(f"{type(res).__name__}: {res}"[:200])
+        elif isinstance(res, list):
             for it in res:
                 raw_items.append(it)
                 s_name = it.get("source_site", "不明")
@@ -235,6 +238,7 @@ async def live_search_and_sync(
         },
         "fetched_raw_count": len(raw_items),
         "source_breakdown": source_counts,
+        "source_errors": source_errors,
         "upsert_summary": upsert_summary,
         "properties": queried,
     }

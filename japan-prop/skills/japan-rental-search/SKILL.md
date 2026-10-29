@@ -13,8 +13,8 @@ jp-property-finder の MCP ツールを使って、日本の物件探しを手�
    - エリア（都道府県・市区町村、または通勤先の駅）
    - 賃貸か売買か。賃貸なら家賃の上限（管理費込みか）、売買なら予算
    - 間取り・広さ、駅徒歩、入居時期、ペット・楽器などの必須条件
-2. `live_search_japan_properties` で検索する。賃貸は `category="賃貸"`。市区町村ごとに呼ぶ。
-3. `query_local_properties` で絞り込む。賃貸では `price` が月額家賃なので、家賃の上限は `max_price`（円）で指定する。駅徒歩は `max_walk_min`、並び順は `sort_by`（`price_asc`、`walk_asc`、`newest` など）。
+2. `research_properties` で調査する（`category="賃貸"`、`use_case="residence"`、家賃の上限は `max_monthly_cost`）。収集・絞り込み・採点・検証がまとめて行われる。詳しい手順は property-research スキルを参照。
+3. 候補が少なければ、報告の「いちばん多く除外した条件」を伝えて、条件を緩めるか聞く。
 4. 気になる物件は `get_property_detail` で掲載元 URL を確認し、`analyze_property_hazard_and_surroundings` で浸水・土砂災害のリスクと周辺施設を調べる。
 5. 候補が複数あれば `compare_properties_tool` で表にまとめる。
 

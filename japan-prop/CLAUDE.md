@@ -6,6 +6,7 @@
 
 `.mcp.json` に `jp-property-finder` が定義されており、以下のMCPツールを直接呼び出せます。
 
+- `research_properties`: **物件探しではまずこれを使います。** 条件の正規化（人数→面積など）、エリアごとのライブ検索（失敗時はDBの過去データで継続）、必須条件での絞り込み、採点、掲載データの欠落・矛盾の検出をまとめて行い、前提・収集状況・データの鮮度・候補・足りない範囲・確認事項・非公開物件の注意を含む報告を返します。手順は `skills/property-research/SKILL.md` にあります。
 - `live_search_japan_properties`: 指定した都道府県・市区町村・物件種別について、スーモ・ヤフー不動産・ニフティ不動産を並列検索し、国土地理院APIで座標と標高を付与してSQLiteへ名寄せ保存します。
 - `query_local_properties`: ローカルDBに蓄積された物件を価格・面積・駅徒歩・周辺相場割安度・並び順で高速検索します。
 - `get_property_detail`: 物件番号（ID）の全詳細、各ポータルURL、価格推移履歴、各エージェントの評価履歴を取得します。
@@ -22,6 +23,9 @@
 ## 2. CLI経由でのネイティブ呼び出し（Codex CLI / Claude Code / Antigravity ターミナル実行用）
 
 ```powershell
+# 調査ハーネス：条件の正規化・横断収集・絞り込み・採点・検証をまとめて実行（--offline でDBのみ）
+uv run python cli.py research --prefecture 北海道 --municipality 札幌市中央区 札幌市北区 --category オフィス --use-case software_dev --headcount-min 2 --headcount-max 10
+
 # リアルタイム横断検索＆DB名寄せ統合
 uv run python cli.py search --prefecture 東京都 --municipality 港区 --category 売地 --agent claude
 

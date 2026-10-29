@@ -11,6 +11,7 @@ from backend.municipalities import (
     resolve_location,
 )
 from backend.connectors.aggregator import live_search_and_sync
+from backend.research import ResearchRequirements, render_markdown, run_research
 from backend.connectors.gsi_gov import (
     analyze_hazard_and_topography,
     fetch_surrounding_facilities,
@@ -50,6 +51,7 @@ mcp = FastMCP(
         "日本全国の不動産・土地・戸建て・マンション・空き家・収益物件・賃貸を網羅的に検索・空間分析する"
         "ネイティブMCPサーバーです。Claude、Codex、Antigravityから直接呼び出し可能で、"
         "Web UIおよびローカルSQLiteデータベースとリアルタイムに状態を共有します。"
+        "物件探しの依頼では、まず research_properties で調査し、その報告をもとに個別ツールで深掘りしてください。"
         "賃貸物件では price が月額家賃（円）です。"
         "検索対象はポータルサイトに掲載された物件だけです。日本には不動産事業者（宅地建物取引業者）しか"
         "閲覧できない非公開物件（レインズなど業者向けシステムのみに登録された物件や、広告されない物件）があるため、"
@@ -140,6 +142,55 @@ def query_local_properties(
             highlighted_property_ids=[it["id"] for it in items[:10]],
         )
     return json.dumps({"count": len(items), "properties": items}, ensure_ascii=False, indent=2)
+
+
+@mcp.tool()
+async def research_properties(
+    prefecture: str = "東京都",
+    municipalities: Optional[List[str]] = None,
+    category: str = "賃貸",
+    use_case: str = "residence",
+    headcount_min: Optional[int] = None,
+    headcount_max: Optional[int] = None,
+    min_area_sqm: Optional[float] = None,
+    max_area_sqm: Optional[float] = None,
+    max_monthly_cost: Optional[int] = None,
+    max_walk_min: Optional[int] = None,
+    must_have: Optional[List[str]] = None,
+    exclude: Optional[List[str]] = None,
+    shortlist_size: int = 10,
+    live: bool = True,
+    output_format: str = "markdown",
+) -> str:
+    """
+    物件探しの調査を一括で行うハーネスです。物件を探す依頼では、個別の検索ツールより先にこれを使ってください。
+    条件の正規化（人数→面積など）、エリアごとのライブ検索（失敗時はDBの過去データで継続）、必須条件での絞り込み、
+    採点、掲載データの欠落・矛盾の検出をまとめて行い、前提・収集状況・データの鮮度・候補・足りない範囲・
+    確認事項・非公開物件の注意・次にやることを含む報告を返します。
+    use_case は residence（住まい）/ office（一般オフィス）/ software_dev（ソフトウェア開発オフィス）。
+    max_monthly_cost は月額（賃貸は家賃、オフィスは共益費込み）の上限（円）。
+    must_have / exclude は掲載文に含まれるべき語・含まれてはいけない語（例: ["24時間"]）。
+    output_format は markdown か json。
+    """
+    req = ResearchRequirements(
+        prefecture=prefecture,
+        municipalities=municipalities or [],
+        category=category,
+        use_case=use_case,
+        headcount_min=headcount_min,
+        headcount_max=headcount_max,
+        min_area_sqm=min_area_sqm,
+        max_area_sqm=max_area_sqm,
+        max_monthly_cost=max_monthly_cost,
+        max_walk_min=max_walk_min,
+        must_have=must_have or [],
+        exclude=exclude or [],
+        shortlist_size=shortlist_size,
+    )
+    report = await run_research(req, live=live)
+    if output_format == "json":
+        return json.dumps(report, ensure_ascii=False, indent=2)
+    return render_markdown(report)
 
 
 @mcp.tool()
