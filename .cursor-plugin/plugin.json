@@ -1,0 +1,25 @@
+{
+  "name": "world-realestate",
+  "version": "0.2.0",
+  "description": "世界の不動産相場を調べる MCP サーバー。日本・英国・フランス・シンガポール・台湾・韓国の取引データ（地域・地区別の価格中央値と㎡単価）と、約60か国の住宅価格・家賃指数（BIS・OECD）、米国の州・都市圏別価格指数（FHFA）を同梱",
+  "author": {
+    "name": "msandroid"
+  },
+  "repository": "https://github.com/msandroid/Finder",
+  "license": "MIT",
+  "keywords": [
+    "real-estate",
+    "housing",
+    "property-prices",
+    "global",
+    "mcp"
+  ],
+  "mcpServers": {
+    "world-realestate": {
+      "command": "node",
+      "args": [
+        "${CURSOR_PLUGIN_ROOT}/dist/world-realestate-mcp.mjs"
+      ]
+    }
+  }
+}

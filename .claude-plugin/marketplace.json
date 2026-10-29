@@ -1,0 +1,23 @@
+{
+  "name": "world-realestate",
+  "owner": {
+    "name": "msandroid"
+  },
+  "metadata": {
+    "description": "日本の不動産・賃貸探しと、世界の不動産相場 MCP"
+  },
+  "plugins": [
+    {
+      "name": "japan-prop",
+      "source": "./japan-prop",
+      "description": "日本の不動産・賃貸探し。スーモ・ヤフー不動産・ニフティ不動産の賃貸・売買物件を横断検索して名寄せし、ハザードマップ・周辺施設・利回りなどを調べる MCP サーバー。ポータルに載らない非公開物件（不動産事業者のみ閲覧可）は対象外",
+      "version": "1.0.0"
+    },
+    {
+      "name": "world-realestate",
+      "source": "./",
+      "description": "世界の不動産相場を調べる MCP サーバー。日本・英国・フランス・シンガポール・台湾・韓国の取引データ（地域・地区別の価格中央値と㎡単価）と、約60か国の住宅価格・家賃指数（BIS・OECD）、米国の州・都市圏別価格指数（FHFA）を同梱",
+      "version": "0.2.0"
+    }
+  ]
+}

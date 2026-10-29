@@ -1,0 +1,18 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+
+# SQLite temporary files
+data/*.db-wal
+data/*.db-shm
+
+# Environment variables
+.env
+.env.local

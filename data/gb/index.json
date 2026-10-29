@@ -1,0 +1,1617 @@
+{
+  "regions": [
+    {
+      "code": "bath-and-north-east-somerset",
+      "name": "Bath And North East Somerset",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "bedford",
+      "name": "Bedford",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "blackburn-with-darwen",
+      "name": "Blackburn With Darwen",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "blackpool",
+      "name": "Blackpool",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "blaenau-gwent",
+      "name": "Blaenau Gwent",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "bournemouth-christchurch-and-poole",
+      "name": "Bournemouth, Christchurch And Poole",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "bracknell-forest",
+      "name": "Bracknell Forest",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "bridgend",
+      "name": "Bridgend",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "brighton-and-hove",
+      "name": "Brighton And Hove",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "buckinghamshire",
+      "name": "Buckinghamshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "caerphilly",
+      "name": "Caerphilly",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "cambridgeshire",
+      "name": "Cambridgeshire",
+      "cities": 5,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "cardiff",
+      "name": "Cardiff",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "carmarthenshire",
+      "name": "Carmarthenshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "central-bedfordshire",
+      "name": "Central Bedfordshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "ceredigion",
+      "name": "Ceredigion",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "cheshire-east",
+      "name": "Cheshire East",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "cheshire-west-and-chester",
+      "name": "Cheshire West And Chester",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "city-of-bristol",
+      "name": "City Of Bristol",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "city-of-derby",
+      "name": "City Of Derby",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "city-of-kingston-upon-hull",
+      "name": "City Of Kingston Upon Hull",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "city-of-nottingham",
+      "name": "City Of Nottingham",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "city-of-peterborough",
+      "name": "City Of Peterborough",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "city-of-plymouth",
+      "name": "City Of Plymouth",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "conwy",
+      "name": "Conwy",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "cornwall",
+      "name": "Cornwall",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "county-durham",
+      "name": "County Durham",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "cumberland",
+      "name": "Cumberland",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "cumbria",
+      "name": "Cumbria",
+      "cities": 6,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2023Q1",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "darlington",
+      "name": "Darlington",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "denbighshire",
+      "name": "Denbighshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "derbyshire",
+      "name": "Derbyshire",
+      "cities": 8,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "devon",
+      "name": "Devon",
+      "cities": 8,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "dorset",
+      "name": "Dorset",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "east-riding-of-yorkshire",
+      "name": "East Riding Of Yorkshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "east-sussex",
+      "name": "East Sussex",
+      "cities": 5,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "essex",
+      "name": "Essex",
+      "cities": 12,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "flintshire",
+      "name": "Flintshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "gloucestershire",
+      "name": "Gloucestershire",
+      "cities": 6,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "greater-london",
+      "name": "Greater London",
+      "cities": 33,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "greater-manchester",
+      "name": "Greater Manchester",
+      "cities": 10,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "gwynedd",
+      "name": "Gwynedd",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "halton",
+      "name": "Halton",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "hampshire",
+      "name": "Hampshire",
+      "cities": 11,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "hartlepool",
+      "name": "Hartlepool",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "herefordshire",
+      "name": "Herefordshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "hertfordshire",
+      "name": "Hertfordshire",
+      "cities": 10,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "isle-of-anglesey",
+      "name": "Isle Of Anglesey",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "isle-of-wight",
+      "name": "Isle Of Wight",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "isles-of-scilly",
+      "name": "Isles Of Scilly",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q2",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "kent",
+      "name": "Kent",
+      "cities": 12,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "lancashire",
+      "name": "Lancashire",
+      "cities": 12,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "leicester",
+      "name": "Leicester",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "leicestershire",
+      "name": "Leicestershire",
+      "cities": 7,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "lincolnshire",
+      "name": "Lincolnshire",
+      "cities": 7,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "luton",
+      "name": "Luton",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "medway",
+      "name": "Medway",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "merseyside",
+      "name": "Merseyside",
+      "cities": 5,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "merthyr-tydfil",
+      "name": "Merthyr Tydfil",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "middlesbrough",
+      "name": "Middlesbrough",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "milton-keynes",
+      "name": "Milton Keynes",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "monmouthshire",
+      "name": "Monmouthshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "neath-port-talbot",
+      "name": "Neath Port Talbot",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "newport",
+      "name": "Newport",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "norfolk",
+      "name": "Norfolk",
+      "cities": 7,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "north-east-lincolnshire",
+      "name": "North East Lincolnshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "north-lincolnshire",
+      "name": "North Lincolnshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "north-northamptonshire",
+      "name": "North Northamptonshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "north-somerset",
+      "name": "North Somerset",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "north-yorkshire",
+      "name": "North Yorkshire",
+      "cities": 8,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "northamptonshire",
+      "name": "Northamptonshire",
+      "cities": 7,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2021Q1",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "northumberland",
+      "name": "Northumberland",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "nottinghamshire",
+      "name": "Nottinghamshire",
+      "cities": 7,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "oxfordshire",
+      "name": "Oxfordshire",
+      "cities": 5,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "pembrokeshire",
+      "name": "Pembrokeshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "portsmouth",
+      "name": "Portsmouth",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "powys",
+      "name": "Powys",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "reading",
+      "name": "Reading",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "redcar-and-cleveland",
+      "name": "Redcar And Cleveland",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "rhondda-cynon-taff",
+      "name": "Rhondda Cynon Taff",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "rutland",
+      "name": "Rutland",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "shropshire",
+      "name": "Shropshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "slough",
+      "name": "Slough",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "somerset",
+      "name": "Somerset",
+      "cities": 5,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "south-gloucestershire",
+      "name": "South Gloucestershire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "south-yorkshire",
+      "name": "South Yorkshire",
+      "cities": 4,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "southampton",
+      "name": "Southampton",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "southend-on-sea",
+      "name": "Southend-On-Sea",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "staffordshire",
+      "name": "Staffordshire",
+      "cities": 8,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "stockton-on-tees",
+      "name": "Stockton-On-Tees",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "stoke-on-trent",
+      "name": "Stoke-On-Trent",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "suffolk",
+      "name": "Suffolk",
+      "cities": 5,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "surrey",
+      "name": "Surrey",
+      "cities": 11,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "swansea",
+      "name": "Swansea",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "swindon",
+      "name": "Swindon",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "the-vale-of-glamorgan",
+      "name": "The Vale Of Glamorgan",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "thurrock",
+      "name": "Thurrock",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "torbay",
+      "name": "Torbay",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "torfaen",
+      "name": "Torfaen",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "tyne-and-wear",
+      "name": "Tyne And Wear",
+      "cities": 5,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "warrington",
+      "name": "Warrington",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "warwickshire",
+      "name": "Warwickshire",
+      "cities": 5,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "west-berkshire",
+      "name": "West Berkshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "west-midlands",
+      "name": "West Midlands",
+      "cities": 7,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "west-northamptonshire",
+      "name": "West Northamptonshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "west-sussex",
+      "name": "West Sussex",
+      "cities": 7,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "west-yorkshire",
+      "name": "West Yorkshire",
+      "cities": 5,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "westmorland-and-furness",
+      "name": "Westmorland And Furness",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "wiltshire",
+      "name": "Wiltshire",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "windsor-and-maidenhead",
+      "name": "Windsor And Maidenhead",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "wokingham",
+      "name": "Wokingham",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "worcestershire",
+      "name": "Worcestershire",
+      "cities": 6,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "wrekin",
+      "name": "Wrekin",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "wrexham",
+      "name": "Wrexham",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    },
+    {
+      "code": "york",
+      "name": "York",
+      "cities": 1,
+      "types": [
+        "detached",
+        "flat",
+        "semi-detached",
+        "terraced"
+      ],
+      "from": "2021Q1",
+      "to": "2026Q3",
+      "generatedAt": "2026-09-30T01:57:19.956Z"
+    }
+  ],
+  "country": "GB",
+  "currency": "GBP",
+  "updatedAt": "2026-09-30T01:57:19.956Z"
+}
